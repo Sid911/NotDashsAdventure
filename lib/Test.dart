@@ -9,7 +9,7 @@ import 'package:not_dashs_adventure/Utility/direction.dart';
 
 import 'Utility/puzzle.dart';
 
-class IsometricTileMapExample extends FlameGame with MouseMovementDetector {
+class IsometricTileMapExample extends FlameGame with MouseMovementDetector, TapDetector {
   static const String description = '''
     Shows an example of how to use the `IsometricTileMapComponent`.\n\n
     Move the mouse over the board to see a selector appearing on the tiles.
@@ -33,6 +33,7 @@ class IsometricTileMapExample extends FlameGame with MouseMovementDetector {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    overlays.add("designer");
     final tilesetImage = await images.load('tilesheet.png');
     final tileset = SpriteSheet(
       image: tilesetImage,
@@ -67,6 +68,13 @@ class IsometricTileMapExample extends FlameGame with MouseMovementDetector {
   void onMouseMove(PointerHoverInfo info) {
     final screenPosition = info.eventPosition.game;
     final block = base.getBlock(screenPosition);
+  }
+
+  @override
+  void onTapDown(TapDownInfo info) {
+    final screenPosition = info.eventPosition.game;
+    final block = base.getBlock(screenPosition);
+    print('x : ${block.x} , y : ${block.y}');
   }
 
   void testPuzzle() {

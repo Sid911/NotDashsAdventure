@@ -1,4 +1,8 @@
+import 'package:circular_clip_route/circular_clip_route.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/LDFlutterUI.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({Key? key}) : super(key: key);
@@ -8,6 +12,46 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
+  final levelDesignButton = Builder(builder: (BuildContext context) {
+    return MaterialButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          CircularClipRoute(
+            builder: (BuildContext context) => GameWidget(
+              game: LevelDesigner(),
+              loadingBuilder: (BuildContext context) {
+                return Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.black,
+                  child: const LinearProgressIndicator(),
+                );
+              },
+              overlayBuilderMap: {
+                'designer': (context, _) {
+                  return const LDFlutterUI();
+                }
+              },
+            ),
+            expandFrom: context,
+          ),
+        );
+      },
+      color: Colors.blueGrey,
+      elevation: 10,
+      child: const Text(
+        "Level Designer",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  });
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,17 +63,19 @@ class _MainMenuState extends State<MainMenu> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                  padding: const EdgeInsets.only(bottom: 50),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Not dash's Adventure",
-                        style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
-                      ),
-                      IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
-                    ],
-                  )), // Logo , settings button etc.
+                padding: const EdgeInsets.only(bottom: 50),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Not dash's Adventure",
+                      style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+                    ),
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+                  ],
+                ),
+              ),
+              // Logo , settings button etc.
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -38,15 +84,7 @@ class _MainMenuState extends State<MainMenu> {
                     onPressed: () {},
                     child: const Text("Play Story"),
                   ),
-                  MaterialButton(
-                    onPressed: () {},
-                    color: Colors.blueGrey,
-                    elevation: 10,
-                    child: const Text(
-                      "Level Designer",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                  levelDesignButton,
                 ],
               ), // Menu
             ],
