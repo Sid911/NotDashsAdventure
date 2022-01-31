@@ -1,7 +1,10 @@
 import 'package:circular_clip_route/circular_clip_route.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:not_dashs_adventure/Pages/LevelDesigner/LDFlutterUI.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:not_dashs_adventure/Bloc/level_gen_ui_cubit.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BlocksList.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_NavAndOptions.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
 
 class MainMenu extends StatefulWidget {
@@ -29,8 +32,14 @@ class _MainMenuState extends State<MainMenu> {
                 );
               },
               overlayBuilderMap: {
-                'designer': (context, _) {
-                  return const LDFlutterUI();
+                'options': (context, _) {
+                  return BlocProvider(
+                    create: (context) => LevelGenUiCubit(),
+                    child: const NavAndOptions(),
+                  );
+                },
+                "blocksList": (context, _) {
+                  return const BlocksList();
                 }
               },
             ),
@@ -71,7 +80,7 @@ class _MainMenuState extends State<MainMenu> {
                       "Not dash's Adventure",
                       style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
                     ),
-                    IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
                   ],
                 ),
               ),

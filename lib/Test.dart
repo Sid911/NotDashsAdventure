@@ -86,7 +86,12 @@ class IsometricTileMapExample extends FlameGame with MouseMovementDetector, TapD
       [PuzzleCell.blocked, PuzzleCell.open, PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.blocked],
     ];
 
-    Puzzle puzzle = Puzzle(data: initialMatrix, maxSolDistance: 9, start: Point(0, 3), end: Point(1, 0), startDirection: MotionDirection.right);
+    Puzzle puzzle = Puzzle(
+        data: initialMatrix,
+        maxSolDistance: 9,
+        start: Point(0, 3),
+        end: Point(1, 0),
+        startDirection: MotionDirection.right);
     puzzle.swapCells(Point(4, 1), Point(3, 1));
     final result = puzzle.getCurrentLightPath();
     for (Point x in result) {

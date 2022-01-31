@@ -42,6 +42,9 @@ dependencies:
   flame_splash_screen: ^0.1.0
   json_annotation: ^4.4.0
   circular_clip_route: ^0.2.0+1
+  bloc: ^8.0.2
+  flutter_bloc: ^8.0.1
+  equatable: ^2.0.3
 
 dev_dependencies:
   flutter_test:
