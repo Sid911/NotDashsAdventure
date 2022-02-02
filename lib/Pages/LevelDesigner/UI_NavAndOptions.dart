@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:not_dashs_adventure/Bloc/level_gen_ui_cubit.dart';
+import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 
 class NavAndOptions extends StatelessWidget {
   const NavAndOptions({Key? key}) : super(key: key);

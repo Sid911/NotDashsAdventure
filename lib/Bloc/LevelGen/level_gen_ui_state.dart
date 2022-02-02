@@ -7,14 +7,16 @@ abstract class LevelGenUiState extends Equatable {
 
 class LevelGenUiShow extends LevelGenUiState {
   const LevelGenUiShow() : super(showUI: true);
+
+  // int totalTiles;
+  // int lastIndex;
+  //
   @override
   List<Object> get props => [showUI];
-
 }
 
-class LevelGenUIHide extends LevelGenUiState{
+class LevelGenUIHide extends LevelGenUiState {
   const LevelGenUIHide() : super(showUI: false);
   @override
   List<Object?> get props => [showUI];
-
 }

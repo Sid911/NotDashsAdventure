@@ -2,7 +2,7 @@ import 'package:circular_clip_route/circular_clip_route.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:not_dashs_adventure/Bloc/level_gen_ui_cubit.dart';
+import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BlocksList.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_NavAndOptions.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
@@ -65,39 +65,37 @@ class _MainMenuState extends State<MainMenu> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey,
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(bottom: 50),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Not dash's Adventure",
-                      style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
-                    ),
-                    IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
-                  ],
-                ),
-              ),
-              // Logo , settings button etc.
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(bottom: 50),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  MaterialButton(
-                    onPressed: () {},
-                    child: const Text("Play Story"),
+                  const Text(
+                    "Not dash's Adventure",
+                    style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
                   ),
-                  levelDesignButton,
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
                 ],
-              ), // Menu
-            ],
-          ),
+              ),
+            ),
+            // Logo , settings button etc.
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MaterialButton(
+                  onPressed: () {},
+                  child: const Text("Play Story"),
+                ),
+                levelDesignButton,
+              ],
+            ), // Menu
+          ],
         ),
       ),
     );

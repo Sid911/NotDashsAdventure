@@ -1,15 +1,16 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-part 'level_gen_ui_state.dart';
+part './level_gen_ui_state.dart';
 
 class LevelGenUiCubit extends Cubit<LevelGenUiState> {
   LevelGenUiCubit() : super(const LevelGenUiShow());
 
-  void showUI(){
+  void showUI() {
     emit(const LevelGenUiShow());
   }
-  void hideUI(){
+
+  void hideUI() {
     emit(const LevelGenUIHide());
   }
 }

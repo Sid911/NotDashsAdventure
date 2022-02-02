@@ -1,5 +1,6 @@
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:not_dashs_adventure/Utility/SplashScreen.dart';
 
@@ -9,6 +10,7 @@ void main() async {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   Flame.device.setLandscape();
   Flame.device.fullScreen();
   runApp(const MaterialApp(
