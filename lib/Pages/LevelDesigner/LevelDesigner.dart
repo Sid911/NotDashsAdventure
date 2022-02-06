@@ -33,8 +33,8 @@ class LevelDesigner extends FlameGame with TapDetector, ScrollDetector, ScaleDet
 
     await super.onLoad();
     // add overlay UI
-    overlays.add(designerUIText);
-    overlays.add("blocksList");
+    // overlays.add(designerUIText);
+    // overlays.add("blocksList");
     // Text Paint
     textPaint = TextPaint(
       style: const TextStyle(

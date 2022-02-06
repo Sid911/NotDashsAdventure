@@ -22,32 +22,30 @@ class _MainMenuState extends State<MainMenu> {
         Navigator.push(
           context,
           CircularClipRoute(
-            builder: (BuildContext context) => GameWidget(
-              game: LevelDesigner(),
-              loadingBuilder: (BuildContext context) {
-                return Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Colors.black,
-                  child: const LinearProgressIndicator(),
-                );
-              },
-              overlayBuilderMap: {
-                'options': (context, _) {
-                  return BlocProvider(
-                    create: (context) => LevelGenUiCubit(),
-                    child: const NavAndOptions(),
+            builder: (BuildContext context) => BlocProvider(
+              create: (context) => LevelGenUiCubit(),
+              child: GameWidget(
+                game: LevelDesigner(),
+                loadingBuilder: (BuildContext context) {
+                  return Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.black,
+                    child: const LinearProgressIndicator(),
                   );
                 },
-                "blocksList": (context, _) {
-                  return BlocProvider(
-                    create: (context) => LevelGenUiCubit(),
-                    child: BlocksList(
+                overlayBuilderMap: {
+                  'options': (context, _) {
+                    return const NavAndOptions();
+                  },
+                  "blocksList": (context, _) {
+                    return BlocksList(
                       logger: Logger("Blocks List UI"),
-                    ),
-                  );
-                }
-              },
+                    );
+                  }
+                },
+                initialActiveOverlays: const ["options", "blocksList"],
+              ),
             ),
             expandFrom: context,
           ),

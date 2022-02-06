@@ -18,9 +18,13 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
     // error area
     if (state is LevelGenUILoaded) {
       final newState = state as LevelGenUILoaded;
-      assert(newState.lastIndex == null);
       currentToggleList[newState.lastIndex!] = false;
     }
+    emit(LevelGenUILoaded(
+        tilesheet: state.tileset!,
+        totalTiles: state.totalTiles!,
+        blocksToggleList: currentToggleList,
+        lastIndex: index));
   }
 
   void loadUI() async {
@@ -28,13 +32,13 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
     //loading UI
     emit(const LevelGenUILoading());
     final tilesheet = await repository.getTileSheet();
-    final totalTiles = tilesheet!.columns * tilesheet.rows;
+    const totalTiles = 20;
     final blocksToggleList = List<bool>.filled(totalTiles, false);
     blocksToggleList.first = true;
     // UI loaded
     _logger.log(Level.FINE, "loadUI : Emitting LevelGenUI Loaded");
     emit(LevelGenUILoaded(
-      tilesheet: tilesheet,
+      tilesheet: tilesheet!,
       totalTiles: totalTiles,
       blocksToggleList: blocksToggleList,
       lastIndex: 0,

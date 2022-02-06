@@ -34,7 +34,6 @@ class BlocksList extends StatelessWidget {
         if (state is LevelGenUILoaded) {
           return buildBlocks(
             state.showUI,
-            getSprites,
             (int buttonIndex) {
               BlocProvider.of<LevelGenUiCubit>(context).toggle(buttonIndex);
             },
@@ -42,58 +41,58 @@ class BlocksList extends StatelessWidget {
             state,
             context,
           );
+        } else {
+          return Container();
         }
-        return Container();
       },
     );
   }
-}
 
-Widget buildBlocks(
-  bool showUI,
-  Function(SpriteSheet tileset, int totalTiles) getSprites,
-  Null Function(int buttonIndex) onPressedToggle,
-  List<bool> toggles,
-  LevelGenUiState state,
-  BuildContext context,
-) {
-  if (showUI) {
-    return Container(
-      height: 80,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white54,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      margin: const EdgeInsets.only(left: 150),
-      child: Material(
-        color: Colors.transparent,
-        child: FutureBuilder(
-            future: getSprites(state.tileset!, state.totalTiles!),
-            builder: (BuildContext context, AsyncSnapshot<List<Widget>> snapshot) {
-              if (snapshot.hasData) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      ToggleButtons(
-                        fillColor: Colors.white24,
-                        borderRadius: BorderRadius.circular(10),
-                        renderBorder: false,
-                        onPressed: onPressedToggle,
-                        children: snapshot.data!,
-                        isSelected: toggles,
-                      ),
-                    ],
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                print(snapshot.error);
-              }
-              return const Text("SpriteSheet Did not load");
-            }),
-      ),
-    );
+  Widget buildBlocks(
+    bool showUI,
+    Null Function(int buttonIndex) onPressedToggle,
+    List<bool> toggles,
+    LevelGenUiState state,
+    BuildContext context,
+  ) {
+    if (showUI) {
+      return Container(
+        height: 80,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white54,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        margin: const EdgeInsets.only(left: 150),
+        child: Material(
+          color: Colors.transparent,
+          child: FutureBuilder(
+              future: getSprites(state.tileset!, state.totalTiles!),
+              builder: (BuildContext context, AsyncSnapshot<List<Widget>> snapshot) {
+                if (snapshot.hasData) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        ToggleButtons(
+                          fillColor: Colors.white24,
+                          borderRadius: BorderRadius.circular(10),
+                          renderBorder: false,
+                          onPressed: onPressedToggle,
+                          children: snapshot.data!,
+                          isSelected: toggles,
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  print(snapshot.error);
+                }
+                return const Text("SpriteSheet Did not load");
+              }),
+        ),
+      );
+    }
+    return Container();
   }
-  return Container();
 }

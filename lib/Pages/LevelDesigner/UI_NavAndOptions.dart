@@ -30,7 +30,27 @@ class NavAndOptions extends StatelessWidget {
                   size: 20,
                 )),
             BlocBuilder<LevelGenUiCubit, LevelGenUiState>(builder: (context, state) {
-              return getShowUIButton(state.showUI, context);
+              if (state.showUI) {
+                return IconButton(
+                    onPressed: () {
+                      final levelGenCubit = BlocProvider.of<LevelGenUiCubit>(context);
+                      levelGenCubit.hideUI();
+                    },
+                    icon: const Icon(
+                      Icons.view_sidebar,
+                      size: 20,
+                    ));
+              } else {
+                return IconButton(
+                    onPressed: () {
+                      final levelGenCubit = BlocProvider.of<LevelGenUiCubit>(context);
+                      levelGenCubit.loadUI();
+                    },
+                    icon: const Icon(
+                      Icons.view_sidebar_outlined,
+                      size: 20,
+                    ));
+              }
             })
           ],
         ),
