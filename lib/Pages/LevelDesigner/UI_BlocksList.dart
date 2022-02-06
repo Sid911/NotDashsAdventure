@@ -1,33 +1,18 @@
-import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
+import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 
-class BlocksList extends StatefulWidget {
-  const BlocksList({Key? key}) : super(key: key);
+class BlocksList extends StatelessWidget {
+  const BlocksList({Key? key, required Logger logger})
+      : _logger = logger,
+        super(key: key);
+  final Logger _logger;
 
-  @override
-  State<BlocksList> createState() => _BlocksListState();
-}
-
-class _BlocksListState extends State<BlocksList> {
-  late SpriteSheet tileset;
-  int totalTiles = 84;
-  int lastIndex = 0;
-  late List<bool> toggles;
-  @override
-  void initState() {
-    super.initState();
-    toggles = List.filled(totalTiles, false);
-    toggles[0] = true;
-    // change this for custom tileset
-  }
-
-  Future<List<Widget>> getSprites(String filename) async {
+  Future<List<Widget>> getSprites(SpriteSheet tileset, int totalTiles) async {
     List<Widget> sprites = List.empty(growable: true);
-    final image = await Flame.images.load(filename);
-    tileset = SpriteSheet(image: image, srcSize: Vector2(111, 128));
     for (int i = 0; i < totalTiles; i++) {
       final sprite = tileset.getSpriteById(i);
       sprites.add(Container(
@@ -43,6 +28,36 @@ class _BlocksListState extends State<BlocksList> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<LevelGenUiCubit, LevelGenUiState>(
+      builder: (context, state) {
+        _logger.log(Level.INFO, "Blocks UI : Level UI state $state");
+        if (state is LevelGenUILoaded) {
+          return buildBlocks(
+            state.showUI,
+            getSprites,
+            (int buttonIndex) {
+              BlocProvider.of<LevelGenUiCubit>(context).toggle(buttonIndex);
+            },
+            state.toggleBlocksList!,
+            state,
+            context,
+          );
+        }
+        return Container();
+      },
+    );
+  }
+}
+
+Widget buildBlocks(
+  bool showUI,
+  Function(SpriteSheet tileset, int totalTiles) getSprites,
+  Null Function(int buttonIndex) onPressedToggle,
+  List<bool> toggles,
+  LevelGenUiState state,
+  BuildContext context,
+) {
+  if (showUI) {
     return Container(
       height: 80,
       padding: const EdgeInsets.all(10),
@@ -54,7 +69,7 @@ class _BlocksListState extends State<BlocksList> {
       child: Material(
         color: Colors.transparent,
         child: FutureBuilder(
-            future: getSprites('tilesheet.png'),
+            future: getSprites(state.tileset!, state.totalTiles!),
             builder: (BuildContext context, AsyncSnapshot<List<Widget>> snapshot) {
               if (snapshot.hasData) {
                 return SingleChildScrollView(
@@ -65,13 +80,7 @@ class _BlocksListState extends State<BlocksList> {
                         fillColor: Colors.white24,
                         borderRadius: BorderRadius.circular(10),
                         renderBorder: false,
-                        onPressed: (int buttonIndex) {
-                          toggles[lastIndex] = false;
-                          setState(() {
-                            toggles[buttonIndex] = true;
-                            lastIndex = buttonIndex;
-                          });
-                        },
+                        onPressed: onPressedToggle,
                         children: snapshot.data!,
                         isSelected: toggles,
                       ),
@@ -86,4 +95,5 @@ class _BlocksListState extends State<BlocksList> {
       ),
     );
   }
+  return Container();
 }

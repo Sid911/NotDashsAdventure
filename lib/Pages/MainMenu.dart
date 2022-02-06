@@ -2,6 +2,7 @@ import 'package:circular_clip_route/circular_clip_route.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BlocksList.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_NavAndOptions.dart';
@@ -39,7 +40,12 @@ class _MainMenuState extends State<MainMenu> {
                   );
                 },
                 "blocksList": (context, _) {
-                  return const BlocksList();
+                  return BlocProvider(
+                    create: (context) => LevelGenUiCubit(),
+                    child: BlocksList(
+                      logger: Logger("Blocks List UI"),
+                    ),
+                  );
                 }
               },
             ),
@@ -55,11 +61,6 @@ class _MainMenuState extends State<MainMenu> {
       ),
     );
   });
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

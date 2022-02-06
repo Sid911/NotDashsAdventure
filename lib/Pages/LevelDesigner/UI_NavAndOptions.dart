@@ -53,7 +53,7 @@ class NavAndOptions extends StatelessWidget {
       return IconButton(
           onPressed: () {
             final levelGenCubit = BlocProvider.of<LevelGenUiCubit>(context);
-            levelGenCubit.showUI();
+            levelGenCubit.loadUI();
           },
           icon: const Icon(
             Icons.view_sidebar_outlined,
