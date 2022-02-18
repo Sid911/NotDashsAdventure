@@ -5,8 +5,12 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
+import 'package:flame_bloc/flame_bloc.dart';
+import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesignerGameState.dart';
+import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 
-class LevelDesigner extends FlameGame with TapDetector, ScrollDetector, ScaleDetector {
+class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, ScaleDetector {
   late TextPaint textPaint;
   static const designerUIText = 'options';
 
@@ -17,15 +21,16 @@ class LevelDesigner extends FlameGame with TapDetector, ScrollDetector, ScaleDet
 
   static const halfSize = false;
   static const tileHeight = 128.0;
-
+  final DesignerGameState _gameState = DesignerGameState();
   final originColor = Paint()..color = const Color(0xFFFF00FF);
   final originColor2 = Paint()..color = const Color(0xFFAA55FF);
 
   late IsometricTileMapComponent base;
+  late IsometricTileMapComponent _highlight;
 
   late Vector2 startPosition;
-  late List<List<int>> matrix;
   late SpriteSheet tileset;
+
   @override
   Future<void> onLoad() async {
     camera.setRelativeOffset(Anchor.center);
@@ -48,16 +53,18 @@ class LevelDesigner extends FlameGame with TapDetector, ScrollDetector, ScaleDet
       image: tilesetImage,
       srcSize: Vector2(srcTileSize, 128),
     );
-    matrix = [
-      [1, 2, 3, 4, 5],
-      [6, 7, 8, 9, 10],
-      [11, 12, 13, 14, 15],
-      [16, 17, 18, 19, 20],
-      [21, 22, 23, 24, 25]
-    ];
+
     base = IsometricTileMapComponent(
       tileset,
-      matrix,
+      _gameState.baseMatrix,
+      destTileSize: Vector2.all(destTileSize),
+      tileHeight: tileHeight,
+      position: topLeft,
+      anchor: Anchor.center,
+    );
+    _highlight = IsometricTileMapComponent(
+      tileset,
+      _gameState.highLightMatrix,
       destTileSize: Vector2.all(destTileSize),
       tileHeight: tileHeight,
       position: topLeft,
@@ -68,6 +75,7 @@ class LevelDesigner extends FlameGame with TapDetector, ScrollDetector, ScaleDet
   @override
   void render(Canvas canvas) {
     add(base);
+    add(_highlight);
     super.render(canvas);
   }
 
@@ -80,8 +88,11 @@ class LevelDesigner extends FlameGame with TapDetector, ScrollDetector, ScaleDet
   @override
   void onTapUp(TapUpInfo info) {
     final screenPosition = info.eventPosition.game;
+    final LevelGenUiState currentUIState = read<LevelGenUiCubit>().state;
     final block = base.getBlock(screenPosition);
-    print(matrix[block.y][block.x]);
+    if (currentUIState is LevelGenUILoaded) {
+      _gameState.toggleIndex(Vector2Int(x: block.x, y: block.y), currentUIState.lastIndex);
+    }
     print('x : ${block.x} , y : ${block.y}');
   }
 

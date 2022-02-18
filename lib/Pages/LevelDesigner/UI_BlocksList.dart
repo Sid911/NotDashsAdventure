@@ -17,8 +17,8 @@ class BlocksList extends StatelessWidget {
       final sprite = tileset.getSpriteById(i);
       sprites.add(Container(
           padding: const EdgeInsets.all(2),
-          width: 111 / 2.5,
-          height: 128 / 2.5,
+          width: 111 / 3,
+          height: 128 / 3,
           child: SpriteWidget(
             sprite: sprite,
           )));
@@ -30,7 +30,7 @@ class BlocksList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LevelGenUiCubit, LevelGenUiState>(
       builder: (context, state) {
-        _logger.log(Level.INFO, "Blocks UI : Level UI state $state");
+        // _logger.log(Level.INFO, "Blocks UI : Level UI state $state");
         if (state is LevelGenUILoaded) {
           return buildBlocks(
             state.showUI,
@@ -57,8 +57,8 @@ class BlocksList extends StatelessWidget {
   ) {
     if (showUI) {
       return Container(
-        height: 80,
-        padding: const EdgeInsets.all(10),
+        height: 60,
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: Colors.white54,
           borderRadius: BorderRadius.circular(20),

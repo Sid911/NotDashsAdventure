@@ -18,14 +18,14 @@ class LevelGenUILoaded extends LevelGenUiState {
     required SpriteSheet tilesheet,
     required int totalTiles,
     required List<bool> blocksToggleList,
-    this.lastIndex,
+    required this.lastIndex,
   }) : super(
           showUI: true,
           toggleBlocksList: blocksToggleList,
           tileset: tilesheet,
           totalTiles: totalTiles,
         );
-  final int? lastIndex;
+  final int lastIndex;
   @override
   List<Object?> get props => [showUI, tileset, totalTiles, toggleBlocksList, lastIndex];
 }
