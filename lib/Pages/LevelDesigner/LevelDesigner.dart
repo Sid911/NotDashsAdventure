@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +24,7 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   late IsometricTileMapComponent base;
   late IsometricTileMapComponent _highlight;
+  late IsometricTileMapComponent _grid;
 
   late Vector2 startPosition;
   late SpriteSheet tileset;
@@ -70,26 +68,31 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       position: topLeft,
       anchor: Anchor.center,
     );
+    _grid = IsometricTileMapComponent(
+      tileset,
+      _gameState.gridMatrix,
+      destTileSize: Vector2.all(destTileSize),
+      tileHeight: tileHeight,
+      position: topLeft,
+      anchor: Anchor.center,
+    );
   }
 
   @override
   void render(Canvas canvas) {
+    add(_grid);
     add(base);
     add(_highlight);
     super.render(canvas);
   }
 
-  // @override
-  // void onMouseMove(PointerHoverInfo info) {
-  //   final screenPosition = info.eventPosition.game;
-  //   final block = base.getBlock(screenPosition);
-  // }
-
   @override
   void onTapUp(TapUpInfo info) {
     final screenPosition = info.eventPosition.game;
+    // get the current state of the UI cubit
     final LevelGenUiState currentUIState = read<LevelGenUiCubit>().state;
     final block = base.getBlock(screenPosition);
+    // replace the tile on the base matrix
     if (currentUIState is LevelGenUILoaded) {
       _gameState.toggleIndex(Vector2Int(x: block.x, y: block.y), currentUIState.lastIndex);
     }
@@ -117,20 +120,34 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   late double startZoom;
   @override
   void onScaleStart(ScaleStartInfo info) {
+    // get the position and zoom the scale started from
     startPosition = info.eventPosition.game;
     startZoom = camera.zoom;
+    // if difference between the top down and scale start is more than 600ms ... that means user is trying to select
     final currentTime = DateTime.now();
     if (_clickStart != null && currentTime.difference(_clickStart!).inMilliseconds > 600) {
       _clickHeld = true;
     }
   }
 
+  // @override
+  // void onLongPressMoveUpdate(LongPressMoveUpdateInfo info) {}
+  // Todo : Replace the old logic for long Press detection with new one
+
   @override
   void onScaleEnd(ScaleEndInfo info) {
+    // set the time of start to null again
     _clickStart = null;
+    // if this was a selection reset the highlightMatrix by copying another default matrix to it
     if (_clickHeld) {
-      print("scale end");
+      // for some reason reassigning highlightMatrix to a copy of a empty list doesn't update... so reassign it manually
+      // get the state
+      final LevelGenUiState currentUIState = read<LevelGenUiCubit>().state;
+      if (currentUIState is LevelGenUILoaded) {
+        _gameState.toggleIndexRangeForLastHighlight(replaceIndex: currentUIState.lastIndex);
+      }
       _gameState.resetHighlight();
+      _highlight.matrix = _gameState.highLightMatrix;
     }
     _clickHeld = false;
   }
@@ -139,16 +156,21 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   void onScaleUpdate(ScaleUpdateInfo info) {
     final currentScale = info.scale.global;
     if (!currentScale.isIdentity()) {
+      // if this is pinch? No idea what this means
       camera.zoom = startZoom * currentScale.x;
       clampZoom();
     } else {
       if (_clickHeld) {
+        // user is holding and dragging
         final screenPosition = info.eventPosition.game;
         final block = _highlight.getBlock(screenPosition);
         if (block.x >= 0 && block.x <= _gameState.size && block.y >= 0 && block.y <= _gameState.size) {
+          // is inside grid bounds
           final Block startBlock = _highlight.getBlock(startPosition);
           _gameState.highlight(Vector2Int.fromBlock(block: startBlock), Vector2Int.fromBlock(block: block));
         } else {
+          // shake the camera till user comes inside the bounds ...
+          // clear confession I forgot this would shake continuously till the user came in bounds but hey! that works.
           camera.shake(duration: 0.02, intensity: 10);
         }
       } else {
