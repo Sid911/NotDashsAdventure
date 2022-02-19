@@ -57,7 +57,7 @@ class BlocksList extends StatelessWidget {
   ) {
     if (showUI) {
       return Container(
-        height: 60,
+        height: 50,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: Colors.white54,

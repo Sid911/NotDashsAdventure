@@ -22,8 +22,8 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   static const halfSize = false;
   static const tileHeight = 128.0;
   final DesignerGameState _gameState = DesignerGameState();
-  final originColor = Paint()..color = const Color(0xFFFF00FF);
-  final originColor2 = Paint()..color = const Color(0xFFAA55FF);
+  DateTime? _clickStart;
+  bool _clickHeld = false;
 
   late IsometricTileMapComponent base;
   late IsometricTileMapComponent _highlight;
@@ -94,6 +94,12 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       _gameState.toggleIndex(Vector2Int(x: block.x, y: block.y), currentUIState.lastIndex);
     }
     print('x : ${block.x} , y : ${block.y}');
+    _clickStart = null;
+  }
+
+  @override
+  void onTapDown(TapDownInfo info) {
+    _clickStart = DateTime.now();
   }
 
   void clampZoom() {
@@ -113,6 +119,20 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   void onScaleStart(ScaleStartInfo info) {
     startPosition = info.eventPosition.game;
     startZoom = camera.zoom;
+    final currentTime = DateTime.now();
+    if (_clickStart != null && currentTime.difference(_clickStart!).inMilliseconds > 600) {
+      _clickHeld = true;
+    }
+  }
+
+  @override
+  void onScaleEnd(ScaleEndInfo info) {
+    _clickStart = null;
+    if (_clickHeld) {
+      print("scale end");
+      _gameState.resetHighlight();
+    }
+    _clickHeld = false;
   }
 
   @override
@@ -122,8 +142,19 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       camera.zoom = startZoom * currentScale.x;
       clampZoom();
     } else {
-      camera.translateBy(startPosition - info.eventPosition.game);
-      camera.snap();
+      if (_clickHeld) {
+        final screenPosition = info.eventPosition.game;
+        final block = _highlight.getBlock(screenPosition);
+        if (block.x >= 0 && block.x <= _gameState.size && block.y >= 0 && block.y <= _gameState.size) {
+          final Block startBlock = _highlight.getBlock(startPosition);
+          _gameState.highlight(Vector2Int.fromBlock(block: startBlock), Vector2Int.fromBlock(block: block));
+        } else {
+          camera.shake(duration: 0.02, intensity: 10);
+        }
+      } else {
+        camera.translateBy(startPosition - info.eventPosition.game);
+        camera.snap();
+      }
     }
   }
 }

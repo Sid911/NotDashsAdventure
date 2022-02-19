@@ -10,7 +10,7 @@ class NavAndOptions extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         margin: const EdgeInsets.only(left: 10),
-        height: 60,
+        height: 50,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white54,
