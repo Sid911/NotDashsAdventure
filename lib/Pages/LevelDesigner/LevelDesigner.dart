@@ -8,9 +8,6 @@ import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesignerGameState.d
 import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 
 class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, ScaleDetector {
-  late TextPaint textPaint;
-  static const designerUIText = 'options';
-
   final topLeft = Vector2(0, 0);
 
   static const srcTileSize = 111.0;
@@ -35,17 +32,6 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     camera.speed = 100;
 
     await super.onLoad();
-    // add overlay UI
-    // overlays.add(designerUIText);
-    // overlays.add("blocksList");
-    // Text Paint
-    textPaint = TextPaint(
-      style: const TextStyle(
-        fontSize: 48.0,
-        fontFamily: 'Awesome Font',
-      ),
-    );
-
     final tilesetImage = await images.load('tilesheet.png');
     tileset = SpriteSheet(
       image: tilesetImage,

@@ -7,6 +7,7 @@ import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BlocksList.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_NavAndOptions.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_SaveAndTest.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({Key? key}) : super(key: key);
@@ -42,9 +43,12 @@ class _MainMenuState extends State<MainMenu> {
                     return BlocksList(
                       logger: Logger("Blocks List UI"),
                     );
+                  },
+                  "saveAndTest": (context, _) {
+                    return const SaveAndTest();
                   }
                 },
-                initialActiveOverlays: const ["options", "blocksList"],
+                initialActiveOverlays: const ["options", "blocksList", "saveAndTest"],
               ),
             ),
             expandFrom: context,

@@ -11,7 +11,10 @@ class TilesheetLog {
     required this.customSpriteSheet,
     required this.internalPath,
     required this.description,
-  });
+    required this.recommendedTilesList,
+    required this.tileCategoryMap,
+    required this.srcSize,
+  }) : assert(srcSize.length != 2);
   @HiveField(0)
   final String keyName;
   @HiveField(1)
@@ -24,4 +27,10 @@ class TilesheetLog {
   String internalPath;
   @HiveField(5)
   String description;
+  @HiveField(6)
+  List<int> recommendedTilesList;
+  @HiveField(7)
+  Map<String, List<int>> tileCategoryMap;
+  @HiveField(8)
+  List<int> srcSize;
 }

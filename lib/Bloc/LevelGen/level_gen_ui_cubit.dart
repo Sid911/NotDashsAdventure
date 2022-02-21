@@ -11,7 +11,7 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
   TilesheetRepository repository = TilesheetRepository();
   final Logger _logger = Logger("LeveL Genration UI");
 
-  void toggle(int index) {
+  void toggleTile(int index) {
     List<bool>? currentToggleList = state.toggleBlocksList;
     currentToggleList ??= List<bool>.filled(state.totalTiles!, false);
     currentToggleList[index] = true;

@@ -23,13 +23,17 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
       customSpriteSheet: fields[3] as bool,
       internalPath: fields[4] as String,
       description: fields[5] as String,
+      recommendedTilesList: (fields[6] as List).cast<int>(),
+      tileCategoryMap: (fields[7] as Map).map((dynamic k, dynamic v) =>
+          MapEntry(k as String, (v as List).cast<int>())),
+      srcSize: (fields[8] as List).cast<int>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, TilesheetLog obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.keyName)
       ..writeByte(1)
@@ -41,7 +45,13 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
       ..writeByte(4)
       ..write(obj.internalPath)
       ..writeByte(5)
-      ..write(obj.description);
+      ..write(obj.description)
+      ..writeByte(6)
+      ..write(obj.recommendedTilesList)
+      ..writeByte(7)
+      ..write(obj.tileCategoryMap)
+      ..writeByte(8)
+      ..write(obj.srcSize);
   }
 
   @override

@@ -35,7 +35,7 @@ class BlocksList extends StatelessWidget {
           return buildBlocks(
             state.showUI,
             (int buttonIndex) {
-              BlocProvider.of<LevelGenUiCubit>(context).toggle(buttonIndex);
+              BlocProvider.of<LevelGenUiCubit>(context).toggleTile(buttonIndex);
             },
             state.toggleBlocksList!,
             state,

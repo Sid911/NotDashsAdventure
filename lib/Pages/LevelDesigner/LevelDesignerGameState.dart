@@ -17,6 +17,8 @@ class DesignerGameState {
 
   /// m and n for the square matrices [baseMatrix] and [highlightMatrix] and [gridMatrix]
   int size;
+  bool isSavedBefore = false;
+  bool isLoaded = false;
 
   /// last Highlighted Block with single Click
   Vector2Int lastHighlightBlock = Vector2Int(x: 0, y: 0);
@@ -78,6 +80,10 @@ class DesignerGameState {
   bool isInsideMatrix(Vector2Int block) {
     if (block.x >= 0 && block.x <= baseMatrix[0].length && block.y >= 0 && block.y <= baseMatrix.length) return true;
     return false;
+  }
+
+  void save() {
+    UnimplementedError("Implement Save method");
   }
 }
 
