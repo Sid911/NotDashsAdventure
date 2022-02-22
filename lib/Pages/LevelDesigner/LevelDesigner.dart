@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesignerGameState.dart';
+import 'package:not_dashs_adventure/Utility/Repositories/TilesheetRepository.dart';
 import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 
 class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, ScaleDetector, FPSCounter {
@@ -19,11 +20,13 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   static const halfSize = false;
   static const tileHeight = 128.0;
+
   final DesignerGameState _gameState = DesignerGameState();
+  final TilesheetRepository _tilesheetRepository = TilesheetRepository();
   DateTime? _clickStart;
   bool _clickHeld = false;
 
-  late IsometricTileMapComponent base;
+  List<IsometricTileMapComponent> envLayers = List<IsometricTileMapComponent>.empty(growable: true);
   late IsometricTileMapComponent _highlight;
   late IsometricTileMapComponent _grid;
 
@@ -38,20 +41,21 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     camera.speed = 100;
 
     await super.onLoad();
-    final tilesetImage = await images.load('tilesheet.png');
-    tileset = SpriteSheet(
-      image: tilesetImage,
-      srcSize: Vector2(srcTileSize, 128),
-    );
-
-    base = IsometricTileMapComponent(
-      tileset,
-      _gameState.baseMatrix,
-      destTileSize: Vector2.all(destTileSize),
-      tileHeight: tileHeight,
-      position: topLeft,
-      anchor: Anchor.center,
-    );
+    // Load the basic Tileset
+    final loadedTileset = await _tilesheetRepository.getTileSheet();
+    assert(loadedTileset == null);
+    tileset = loadedTileset!;
+    // Add TileMaps
+    for (int i = 0; i < _gameState.baseMatrix.length; i++) {
+      envLayers.add(IsometricTileMapComponent(
+        tileset,
+        _gameState.baseMatrix[i],
+        destTileSize: Vector2.all(destTileSize),
+        tileHeight: tileHeight,
+        position: topLeft,
+        anchor: Anchor.center,
+      ));
+    }
     _highlight = IsometricTileMapComponent(
       tileset,
       _gameState.highLightMatrix,
@@ -73,10 +77,14 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   @override
   void render(Canvas canvas) {
     add(_grid);
-    add(base);
+    for (int i = 0; i < envLayers.length; i++) {
+      add(envLayers[i]);
+    }
     add(_highlight);
     if (debugMode) {
-      fpsTextPaint.render(canvas, fps(100).toString(), Vector2(0, 50));
+      final double currentfps = fps(100);
+      if (currentfps < 20) fpsTextPaint.render(canvas, currentfps.roundToDouble().toString(), Vector2(0, 50));
+      // print(fps(100).toString());
     }
     super.render(canvas);
   }
@@ -86,12 +94,12 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     final screenPosition = info.eventPosition.game;
     // get the current state of the UI cubit
     final LevelGenUiState currentUIState = read<LevelGenUiCubit>().state;
-    final block = base.getBlock(screenPosition);
     // replace the tile on the base matrix
     if (currentUIState is LevelGenUILoaded) {
-      _gameState.toggleIndex(Vector2Int(x: block.x, y: block.y), currentUIState.lastIndex);
+      final block = envLayers[currentUIState.currentLayer].getBlock(screenPosition);
+      _gameState.toggleIndex(Vector2Int(x: block.x, y: block.y), currentUIState.lastIndex, currentUIState.currentLayer);
+      print('x : ${block.x} , y : ${block.y}');
     }
-    print('x : ${block.x} , y : ${block.y}');
     _clickStart = null;
   }
 
@@ -139,7 +147,8 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       // get the state
       final LevelGenUiState currentUIState = read<LevelGenUiCubit>().state;
       if (currentUIState is LevelGenUILoaded) {
-        _gameState.toggleIndexRangeForLastHighlight(replaceIndex: currentUIState.lastIndex);
+        _gameState.toggleIndexRangeForLastHighlight(
+            replaceIndex: currentUIState.lastIndex, layerIndex: currentUIState.currentLayer);
       }
       _gameState.resetHighlight();
       _highlight.matrix = _gameState.highLightMatrix;

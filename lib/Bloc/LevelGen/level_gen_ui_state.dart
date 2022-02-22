@@ -19,6 +19,7 @@ class LevelGenUILoaded extends LevelGenUiState {
     required int totalTiles,
     required List<bool> blocksToggleList,
     required this.lastIndex,
+    required this.currentLayer,
   }) : super(
           showUI: true,
           toggleBlocksList: blocksToggleList,
@@ -26,8 +27,9 @@ class LevelGenUILoaded extends LevelGenUiState {
           totalTiles: totalTiles,
         );
   final int lastIndex;
+  final int currentLayer;
   @override
-  List<Object?> get props => [showUI, tileset, totalTiles, toggleBlocksList, lastIndex];
+  List<Object?> get props => [showUI, tileset, totalTiles, toggleBlocksList, lastIndex, currentLayer];
 }
 
 class LevelGenUILoading extends LevelGenUiState {

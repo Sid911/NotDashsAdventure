@@ -21,10 +21,12 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
       currentToggleList[newState.lastIndex] = false;
     }
     emit(LevelGenUILoaded(
-        tilesheet: state.tileset!,
-        totalTiles: state.totalTiles!,
-        blocksToggleList: currentToggleList,
-        lastIndex: index));
+      tilesheet: state.tileset!,
+      totalTiles: state.totalTiles!,
+      blocksToggleList: currentToggleList,
+      lastIndex: index,
+      currentLayer: (state as LevelGenUILoaded).currentLayer, // we know that this can only be called when ui is loaded
+    ));
   }
 
   void loadUI() async {
@@ -40,6 +42,7 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
       totalTiles: totalTiles,
       blocksToggleList: blocksToggleList,
       lastIndex: 0,
+      currentLayer: 0,
     ));
   }
 

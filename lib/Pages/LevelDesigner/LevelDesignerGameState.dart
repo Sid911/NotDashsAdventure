@@ -6,7 +6,7 @@ import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 class DesignerGameState {
   DesignerGameState({this.size = 20})
       : defaultMatrix = List.generate(size, (index) => List.generate(size, (_) => -1)),
-        baseMatrix = List.generate(size, (_) => List.generate(size, (_) => -1)),
+        baseMatrix = List.generate(1, (size) => List.generate(size, (_) => List.generate(size, (_) => -1))),
         gridMatrix = List.generate(size, (index) => List.generate(size, (_) => 119)) {
     highLightMatrix = List.from(defaultMatrix);
     highLightMatrix[0][0] = 115;
@@ -23,25 +23,28 @@ class DesignerGameState {
   /// last Highlighted Block with single Click
   Vector2Int lastHighlightBlock = Vector2Int(x: 0, y: 0);
   HighlightRange? lastHighlightRange;
-  List<List<int>> baseMatrix;
+  List<List<List<int>>> baseMatrix;
   List<List<int>> gridMatrix;
   late List<List<int>> highLightMatrix;
   List<List<int>> defaultMatrix;
 
-  void toggleIndex(Vector2Int location, int replacingIndex) {
-    if (location.x >= 0 && location.x <= baseMatrix[0].length && location.y >= 0 && location.y <= baseMatrix.length) {
+  void toggleIndex(Vector2Int location, int replacingIndex, int layerIndex) {
+    if (location.x >= 0 &&
+        location.x <= baseMatrix[0][layerIndex].length &&
+        location.y >= 0 &&
+        location.y <= baseMatrix[layerIndex].length) {
       _logger.log(Level.INFO, "Index : $replacingIndex");
-      baseMatrix[location.y][location.x] = replacingIndex;
+      baseMatrix[layerIndex][location.y][location.x] = replacingIndex;
       highLightMatrix[lastHighlightBlock.y][lastHighlightBlock.x] = -1;
       highLightMatrix[location.y][location.x] = 117;
       lastHighlightBlock = Vector2Int(x: location.x, y: location.y);
     }
   }
 
-  void toggleIndexRangeForLastHighlight({required int replaceIndex}) {
+  void toggleIndexRangeForLastHighlight({required int replaceIndex, required layerIndex}) {
     assert(lastHighlightRange != null);
     for (int i = lastHighlightRange!.lowerY; i <= lastHighlightRange!.higherY; i++) {
-      baseMatrix[i].setAll(
+      baseMatrix[layerIndex][i].setAll(
         lastHighlightRange!.lowerX - 1,
         List<int>.filled(lastHighlightRange!.higherX - lastHighlightRange!.lowerX + 1, replaceIndex),
       );
@@ -77,8 +80,10 @@ class DesignerGameState {
     baseMatrix = List.from(defaultMatrix);
   }
 
-  bool isInsideMatrix(Vector2Int block) {
-    if (block.x >= 0 && block.x <= baseMatrix[0].length && block.y >= 0 && block.y <= baseMatrix.length) return true;
+  bool isInsideMatrix(Vector2Int block, {int? layerIndex}) {
+    final int rowLen = layerIndex != null ? baseMatrix[layerIndex][0].length : baseMatrix[0].length;
+    final int colLen = layerIndex != null ? baseMatrix[layerIndex].length : baseMatrix.length;
+    if (block.x >= 0 && block.x <= rowLen && block.y >= 0 && block.y <= colLen) return true;
     return false;
   }
 
