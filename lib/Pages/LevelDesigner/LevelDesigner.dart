@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,10 @@ import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesignerGameState.dart';
 import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 
-class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, ScaleDetector {
+class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, ScaleDetector, FPSCounter {
+  static final fpsTextPaint = TextPaint(
+    style: const TextStyle(color: Color(0xFFFFFFFF)),
+  );
   final topLeft = Vector2(0, 0);
 
   static const srcTileSize = 111.0;
@@ -25,6 +29,8 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   late Vector2 startPosition;
   late SpriteSheet tileset;
+  @override
+  bool debugMode = true;
 
   @override
   Future<void> onLoad() async {
@@ -69,6 +75,9 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     add(_grid);
     add(base);
     add(_highlight);
+    if (debugMode) {
+      fpsTextPaint.render(canvas, fps(100).toString(), Vector2(0, 50));
+    }
     super.render(canvas);
   }
 

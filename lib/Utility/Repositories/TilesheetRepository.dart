@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
@@ -28,7 +30,7 @@ class TilesheetRepository {
       return SpriteSheet(image: await Flame.images.load("tilesheet.png"), srcSize: Vector2(111, 128));
     }
     if (tileSheetBox.containsKey(tilesheetName)) {
-      final directory = await getApplicationDocumentsDirectory();
+      final Directory directory = await getApplicationDocumentsDirectory();
     }
     return null;
   }
