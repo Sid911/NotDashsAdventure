@@ -87,8 +87,20 @@ class BlocksList extends StatelessWidget {
                   );
                 } else if (snapshot.hasError) {
                   print(snapshot.error);
+                  return const SizedBox(
+                      height: 10,
+                      child: LinearProgressIndicator(
+                        color: Colors.red,
+                        backgroundColor: Colors.transparent,
+                      ));
+                } else {
+                  return const SizedBox(
+                      height: 10,
+                      child: LinearProgressIndicator(
+                        color: Colors.red,
+                        backgroundColor: Colors.transparent,
+                      ));
                 }
-                return const Text("SpriteSheet Did not load");
               }),
         ),
       );

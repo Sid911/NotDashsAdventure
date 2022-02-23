@@ -5,9 +5,9 @@ class SaveAndTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final offsetMargin = MediaQuery.of(context).size.topRight(const Offset(-170, 0));
+    final offsetMargin = MediaQuery.of(context).size.topRight(const Offset(-160, 10));
     return Container(
-      padding: const EdgeInsets.all(0),
+      padding: const EdgeInsets.all(5),
       alignment: Alignment.bottomRight,
       decoration: BoxDecoration(
         color: Colors.white54,
