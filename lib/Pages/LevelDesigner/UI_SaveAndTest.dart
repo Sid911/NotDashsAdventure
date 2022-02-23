@@ -5,17 +5,18 @@ class SaveAndTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final offsetMargin = MediaQuery.of(context).size.bottomRight(const Offset(-170, -60));
+    final offsetMargin = MediaQuery.of(context).size.topRight(const Offset(-170, 0));
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(0),
       alignment: Alignment.bottomRight,
       decoration: BoxDecoration(
         color: Colors.white54,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10),
       ),
       margin: EdgeInsets.only(left: offsetMargin.dx, top: offsetMargin.dy),
-      height: 60,
+      height: 50,
       child: Material(
+        textStyle: const TextStyle(color: Colors.black),
         color: Colors.transparent,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -27,14 +28,18 @@ class SaveAndTest extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: MaterialButton(
+              child: OutlinedButton(
                 onPressed: () {},
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                color: Colors.white54,
                 child: Row(
                   children: const [
-                    Text("Test"),
-                    Icon(Icons.play_arrow_outlined),
+                    Text(
+                      "Test",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    Icon(
+                      Icons.play_arrow_outlined,
+                      color: Colors.black,
+                    ),
                   ],
                 ),
               ),

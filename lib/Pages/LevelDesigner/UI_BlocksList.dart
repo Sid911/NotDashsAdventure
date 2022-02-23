@@ -60,10 +60,10 @@ class BlocksList extends StatelessWidget {
         height: 50,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: Colors.white54,
-          borderRadius: BorderRadius.circular(20),
+          color: Colors.black26,
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(10),
         ),
-        margin: const EdgeInsets.only(left: 150),
         child: Material(
           color: Colors.transparent,
           child: FutureBuilder(

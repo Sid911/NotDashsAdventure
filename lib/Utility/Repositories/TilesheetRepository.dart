@@ -18,22 +18,26 @@ class TilesheetRepository {
   }
   // fields
   static final TilesheetRepository _instance = TilesheetRepository._private();
+
+  String currentTilesheetKey = defaultTilesheet;
+
   final Box<TilesheetLog> tileSheetBox = Hive.box<TilesheetLog>("tilesheet");
   static const String defaultTilesheet = "default";
-  late Logger logger;
 
+  late Logger logger;
+  TilesheetLog? currentTilesheetLog;
   get filename => null;
 
   Future<SpriteSheet?> getTileSheet({String tilesheetName = defaultTilesheet}) async {
     if (tilesheetName == defaultTilesheet) {
       logger.log(Level.INFO, "using default SpriteSheet");
       final TilesheetLog? log = tileSheetBox.get(defaultTilesheet);
-      print(tileSheetBox.values);
+      currentTilesheetLog = log;
       return SpriteSheet(
           image: await Flame.images.load(log!.internalPath),
           srcSize: Vector2(log.srcSize[0].toDouble(), log.srcSize[1].toDouble()));
-    }
-    if (tileSheetBox.containsKey(tilesheetName)) {
+    } else if (tileSheetBox.containsKey(tilesheetName)) {
+      currentTilesheetKey = tilesheetName;
       final Directory directory = await getApplicationDocumentsDirectory();
     }
     return null;

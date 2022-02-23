@@ -2,9 +2,9 @@ import 'package:circular_clip_route/circular_clip_route.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logging/logging.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
-import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BlocksList.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BottomSelector.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_LevelAndVisibility.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_NavAndOptions.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_SaveAndTest.dart';
@@ -39,16 +39,28 @@ class _MainMenuState extends State<MainMenu> {
                   'options': (context, _) {
                     return const NavAndOptions();
                   },
-                  "blocksList": (context, _) {
-                    return BlocksList(
-                      logger: Logger("Blocks List UI"),
-                    );
-                  },
+                  // "blocksList": (context, _) {
+                  //   return BlocksList(
+                  //     logger: Logger("Blocks List UI"),
+                  //   );
+                  // },
                   "saveAndTest": (context, _) {
                     return const SaveAndTest();
+                  },
+                  "levelAndVisibility": (context, _) {
+                    return const LevelAndVisibility();
+                  },
+                  "bottomSelector": (context, _) {
+                    return const BottomSelector();
                   }
                 },
-                initialActiveOverlays: const ["options", "blocksList", "saveAndTest"],
+                initialActiveOverlays: const [
+                  "options",
+                  // "blocksList",
+                  "saveAndTest",
+                  "levelAndVisibility",
+                  "bottomSelector"
+                ],
               ),
             ),
             expandFrom: context,

@@ -11,7 +11,7 @@ import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 
 class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, ScaleDetector, FPSCounter {
   static final fpsTextPaint = TextPaint(
-    style: const TextStyle(color: Color(0xFFFFFFFF)),
+    style: const TextStyle(color: Color(0xFFFF0000)),
   );
   final topLeft = Vector2(0, 0);
 
@@ -84,7 +84,7 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     add(_highlight);
     if (debugMode) {
       final double currentfps = fps(100);
-      if (currentfps < 20) fpsTextPaint.render(canvas, currentfps.roundToDouble().toString(), Vector2(0, 50));
+      if (currentfps < 20) fpsTextPaint.render(canvas, currentfps.roundToDouble().toString(), Vector2(0, 120));
       // print(fps(100).toString());
     }
     super.render(canvas);

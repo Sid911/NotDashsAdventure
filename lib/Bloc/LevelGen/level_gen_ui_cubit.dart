@@ -7,7 +7,7 @@ import 'package:not_dashs_adventure/Utility/Repositories/TilesheetRepository.dar
 part './level_gen_ui_state.dart';
 
 class LevelGenUiCubit extends Cubit<LevelGenUiState> {
-  LevelGenUiCubit() : super(const LevelGenUIHide());
+  LevelGenUiCubit() : super(const LevelGenUIHide(currentLayer: 0));
   TilesheetRepository repository = TilesheetRepository();
   final Logger _logger = Logger("LeveL Genration UI");
 
@@ -25,15 +25,15 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
       totalTiles: state.totalTiles!,
       blocksToggleList: currentToggleList,
       lastIndex: index,
-      currentLayer: (state as LevelGenUILoaded).currentLayer, // we know that this can only be called when ui is loaded
+      currentLayer: (state as LevelGenUILoaded).currentLayer, // we know that this can only be called when ui is loaded,
     ));
   }
 
   void loadUI() async {
     //loading UI
-    emit(const LevelGenUILoading());
+    emit(LevelGenUILoading(currentLayer: state.currentLayer));
     final tilesheet = await repository.getTileSheet();
-    const totalTiles = 20;
+    final totalTiles = repository.currentTilesheetLog!.recommendedTilesList.length;
     final blocksToggleList = List<bool>.filled(totalTiles, false);
     blocksToggleList.first = true;
     // UI loaded
@@ -42,11 +42,28 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
       totalTiles: totalTiles,
       blocksToggleList: blocksToggleList,
       lastIndex: 0,
-      currentLayer: 0,
+      currentLayer: state.currentLayer,
     ));
   }
 
+  void setLayerIndex(int index) {
+    if (state is LevelGenUILoaded) {
+      final currentState = state as LevelGenUILoaded;
+      emit(
+        LevelGenUILoaded(
+            tilesheet: currentState.tileset!,
+            totalTiles: currentState.totalTiles!,
+            blocksToggleList: state.toggleBlocksList!,
+            lastIndex: currentState.lastIndex,
+            currentLayer: index),
+      );
+    } else {
+      _logger.log(Level.INFO, "Current State is not loaded pls wait till it loads");
+    }
+  }
+
   void hideUI() {
-    emit(const LevelGenUIHide());
+    print(state.currentLayer);
+    emit(LevelGenUIHide(currentLayer: state.currentLayer));
   }
 }

@@ -9,12 +9,12 @@ class NavAndOptions extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-        margin: const EdgeInsets.only(left: 10),
+        margin: const EdgeInsets.only(top: 10),
         height: 50,
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: Colors.white54,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: ListView(
           shrinkWrap: true,
