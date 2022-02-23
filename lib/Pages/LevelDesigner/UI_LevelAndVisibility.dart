@@ -26,7 +26,7 @@ class LevelAndVisibility extends StatelessWidget {
                         },
                         enable: true,
                         initialValue: state.currentLayer,
-                        maxValue: 10,
+                        maxValue: 5,
                         minValue: 0,
                         step: 1,
                         shape: const Border(),

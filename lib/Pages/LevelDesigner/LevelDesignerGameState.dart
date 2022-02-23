@@ -29,6 +29,7 @@ class DesignerGameState {
   List<List<int>> defaultMatrix;
 
   void toggleIndex(Vector2Int location, int replacingIndex, int layerIndex) {
+    checkForLayer(layerIndex);
     if (location.x >= 0 &&
         location.x <= baseMatrix[layerIndex][0].length &&
         location.y >= 0 &&
@@ -41,8 +42,9 @@ class DesignerGameState {
     }
   }
 
-  void toggleIndexRangeForLastHighlight({required int replaceIndex, required layerIndex}) {
+  void toggleIndexRangeForLastHighlight({required int replaceIndex, required int layerIndex}) {
     assert(lastHighlightRange != null);
+    checkForLayer(layerIndex);
     for (int i = lastHighlightRange!.lowerY; i <= lastHighlightRange!.higherY; i++) {
       baseMatrix[layerIndex][i].setAll(
         lastHighlightRange!.lowerX - 1,
@@ -78,6 +80,20 @@ class DesignerGameState {
 
   void resetBaseMatrix() {
     baseMatrix = List.from(defaultMatrix);
+  }
+
+  bool checkForLayer(int index) {
+    if (baseMatrix.length <= index) {
+      _logger.log(Level.INFO, "Layer Index out of range : $index");
+      int difference = index - baseMatrix.length + 1;
+      while (difference > 0) {
+        _logger.log(Level.INFO, "Adding layer to base matrix");
+        baseMatrix.add(List.of(defaultMatrix));
+        difference--;
+      }
+      return true;
+    }
+    return false;
   }
 
   bool isInsideMatrix(Vector2Int block, {int? layerIndex}) {

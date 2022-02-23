@@ -47,16 +47,7 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     print("Tileset loaded");
     tileset = loadedTileset!;
     // Add TileMaps
-    for (int i = 0; i < _gameState.baseMatrix.length; i++) {
-      envLayers.add(IsometricTileMapComponent(
-        tileset,
-        _gameState.baseMatrix[i],
-        destTileSize: Vector2.all(destTileSize),
-        tileHeight: tileHeight,
-        position: topLeft,
-        anchor: Anchor.center,
-      ));
-    }
+    computeEnvironment(0);
     _highlight = IsometricTileMapComponent(
       tileset,
       _gameState.highLightMatrix,
@@ -73,6 +64,20 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       position: topLeft,
       anchor: Anchor.center,
     );
+  }
+
+  void computeEnvironment(int initial) {
+    for (int i = initial; i < _gameState.baseMatrix.length; i++) {
+      envLayers.add(IsometricTileMapComponent(
+        tileset,
+        _gameState.baseMatrix[i],
+        destTileSize: Vector2.all(destTileSize),
+        tileHeight: tileHeight,
+        position: topLeft,
+        anchor: Anchor.center,
+      ));
+    }
+    print("environment length : ${envLayers.length}");
   }
 
   @override
@@ -97,6 +102,12 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     final LevelGenUiState currentUIState = read<LevelGenUiCubit>().state;
     // replace the tile on the base matrix
     if (currentUIState is LevelGenUILoaded) {
+      final int totalLayersBefore = _gameState.baseMatrix.length;
+      bool hasEnvChanged = _gameState.checkForLayer(currentUIState.currentLayer);
+      if (hasEnvChanged) {
+        computeEnvironment(totalLayersBefore);
+      }
+
       final block = envLayers[currentUIState.currentLayer].getBlock(screenPosition);
       _gameState.toggleIndex(Vector2Int(x: block.x, y: block.y), currentUIState.lastIndex, currentUIState.currentLayer);
       print('x : ${block.x} , y : ${block.y}');
@@ -148,7 +159,11 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       // get the state
       final LevelGenUiState currentUIState = read<LevelGenUiCubit>().state;
       if (currentUIState is LevelGenUILoaded) {
-        print("The current Layer : ${currentUIState.currentLayer}");
+        final int totalLayersBefore = _gameState.baseMatrix.length;
+        bool hasEnvChanged = _gameState.checkForLayer(currentUIState.currentLayer);
+        if (hasEnvChanged) {
+          computeEnvironment(totalLayersBefore);
+        }
         _gameState.toggleIndexRangeForLastHighlight(
             replaceIndex: currentUIState.lastIndex, layerIndex: currentUIState.currentLayer);
       }
