@@ -39,11 +39,12 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   Future<void> onLoad() async {
     camera.setRelativeOffset(Anchor.center);
     camera.speed = 100;
-
     await super.onLoad();
     // Load the basic Tileset
+    print("starting load");
     final loadedTileset = await _tilesheetRepository.getTileSheet();
-    assert(loadedTileset == null);
+    assert(loadedTileset != null);
+    print("Tileset loaded");
     tileset = loadedTileset!;
     // Add TileMaps
     for (int i = 0; i < _gameState.baseMatrix.length; i++) {
@@ -147,6 +148,7 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       // get the state
       final LevelGenUiState currentUIState = read<LevelGenUiCubit>().state;
       if (currentUIState is LevelGenUILoaded) {
+        print("The current Layer : ${currentUIState.currentLayer}");
         _gameState.toggleIndexRangeForLastHighlight(
             replaceIndex: currentUIState.lastIndex, layerIndex: currentUIState.currentLayer);
       }

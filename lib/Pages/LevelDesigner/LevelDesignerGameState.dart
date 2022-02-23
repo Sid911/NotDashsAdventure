@@ -6,7 +6,7 @@ import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 class DesignerGameState {
   DesignerGameState({this.size = 20})
       : defaultMatrix = List.generate(size, (index) => List.generate(size, (_) => -1)),
-        baseMatrix = List.generate(1, (size) => List.generate(size, (_) => List.generate(size, (_) => -1))),
+        baseMatrix = List.generate(1, (_) => List.generate(size, (_) => List.generate(size, (_) => -1))),
         gridMatrix = List.generate(size, (index) => List.generate(size, (_) => 119)) {
     highLightMatrix = List.from(defaultMatrix);
     highLightMatrix[0][0] = 115;
@@ -30,7 +30,7 @@ class DesignerGameState {
 
   void toggleIndex(Vector2Int location, int replacingIndex, int layerIndex) {
     if (location.x >= 0 &&
-        location.x <= baseMatrix[0][layerIndex].length &&
+        location.x <= baseMatrix[layerIndex][0].length &&
         location.y >= 0 &&
         location.y <= baseMatrix[layerIndex].length) {
       _logger.log(Level.INFO, "Index : $replacingIndex");

@@ -23,10 +23,10 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
       customSpriteSheet: fields[3] as bool,
       internalPath: fields[4] as String,
       description: fields[5] as String,
-      recommendedTilesList: (fields[6] as List).cast<int>(),
-      tileCategoryMap: (fields[7] as Map).map((dynamic k, dynamic v) =>
-          MapEntry(k as String, (v as List).cast<int>())),
-      srcSize: (fields[8] as List).cast<int>(),
+      recommendedTilesList: (fields[6] as List<int>),
+      tileCategoryMap:
+          (fields[7] as Map<dynamic, dynamic>).map((dynamic k, dynamic v) => MapEntry(k as String, v as List<int>)),
+      srcSize: (fields[8] as List<int>),
     );
   }
 
@@ -60,7 +60,5 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TilesheetLogAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is TilesheetLogAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

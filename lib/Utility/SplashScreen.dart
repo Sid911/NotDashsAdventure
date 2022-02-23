@@ -25,7 +25,10 @@ class _SplashScreenGameState extends State<SplashScreenGame> {
     );
     Hive.registerAdapter(TilesheetLogAdapter());
     Hive.openBox<TilesheetLog>("tilesheet").then((value) {
-      if (value.isEmpty) initForFirstTime();
+      if (value.isEmpty) {
+        print('initialize');
+        initForFirstTime(value);
+      }
     });
   }
 

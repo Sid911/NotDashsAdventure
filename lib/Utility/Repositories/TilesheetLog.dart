@@ -14,7 +14,7 @@ class TilesheetLog {
     required this.recommendedTilesList,
     required this.tileCategoryMap,
     required this.srcSize,
-  }) : assert(srcSize.length != 2);
+  }) : assert(srcSize.length == 2);
   @HiveField(0)
   final String keyName;
   @HiveField(1)

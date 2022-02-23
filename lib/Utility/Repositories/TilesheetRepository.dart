@@ -18,7 +18,7 @@ class TilesheetRepository {
   }
   // fields
   static final TilesheetRepository _instance = TilesheetRepository._private();
-  static final Box<TilesheetLog> tileSheetBox = Hive.box<TilesheetLog>("tilesheet");
+  final Box<TilesheetLog> tileSheetBox = Hive.box<TilesheetLog>("tilesheet");
   static const String defaultTilesheet = "default";
   late Logger logger;
 
@@ -28,6 +28,7 @@ class TilesheetRepository {
     if (tilesheetName == defaultTilesheet) {
       logger.log(Level.INFO, "using default SpriteSheet");
       final TilesheetLog? log = tileSheetBox.get(defaultTilesheet);
+      print(tileSheetBox.values);
       return SpriteSheet(
           image: await Flame.images.load(log!.internalPath),
           srcSize: Vector2(log.srcSize[0].toDouble(), log.srcSize[1].toDouble()));
