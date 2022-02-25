@@ -30,28 +30,13 @@ class NavAndOptions extends StatelessWidget {
                   size: 20,
                 )),
             BlocBuilder<LevelGenUiCubit, LevelGenUiState>(builder: (context, state) {
-              if (state.showUI) {
-                return IconButton(
-                    onPressed: () {
-                      final levelGenCubit = BlocProvider.of<LevelGenUiCubit>(context);
-                      levelGenCubit.hideUI();
-                    },
-                    icon: const Icon(
-                      Icons.view_sidebar,
-                      size: 20,
-                    ));
-              } else {
-                return IconButton(
-                    onPressed: () {
-                      final levelGenCubit = BlocProvider.of<LevelGenUiCubit>(context);
-                      levelGenCubit.loadUI();
-                    },
-                    icon: const Icon(
-                      Icons.view_sidebar_outlined,
-                      size: 20,
-                    ));
-              }
-            })
+              return getShowUIButton(state.showUI, context);
+            }),
+            BlocBuilder<LevelGenUiCubit, LevelGenUiState>(
+              builder: (context, state) {
+                return getDeleteButton(state.showUI, context);
+              },
+            )
           ],
         ),
       ),
@@ -81,4 +66,18 @@ class NavAndOptions extends StatelessWidget {
           ));
     }
   }
+}
+
+Widget getDeleteButton(bool showUI, BuildContext context) {
+  return showUI
+      ? IconButton(
+          onPressed: () {
+            BlocProvider.of<LevelGenUiCubit>(context).toggleTile(-1);
+          },
+          icon: const Icon(
+            Icons.delete,
+            size: 20,
+            color: Colors.black,
+          ))
+      : Container();
 }

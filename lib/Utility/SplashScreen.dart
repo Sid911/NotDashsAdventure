@@ -1,4 +1,5 @@
 import 'package:flame_splash_screen/flame_splash_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:not_dashs_adventure/Pages/MainMenu.dart';
@@ -25,7 +26,7 @@ class _SplashScreenGameState extends State<SplashScreenGame> {
     );
     Hive.registerAdapter(TilesheetLogAdapter());
     Hive.openBox<TilesheetLog>("tilesheet").then((value) {
-      if (value.isEmpty) {
+      if (value.isEmpty || kDebugMode) {
         print('initialize');
         initForFirstTime(value);
       }

@@ -12,19 +12,10 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
   final Logger _logger = Logger("LeveL Genration UI");
 
   void toggleTile(int index) {
-    List<bool>? currentToggleList = state.toggleBlocksList;
-    currentToggleList ??= List<bool>.filled(state.totalTiles!, false);
-    currentToggleList[index] = true;
-    // error area
-    if (state is LevelGenUILoaded) {
-      final newState = state as LevelGenUILoaded;
-      currentToggleList[newState.lastIndex] = false;
-    }
     emit(LevelGenUILoaded(
       tilesheet: state.tileset!,
       totalTiles: state.totalTiles!,
-      blocksToggleList: currentToggleList,
-      lastIndex: index,
+      lastTileIndex: index,
       currentLayer: (state as LevelGenUILoaded).currentLayer, // we know that this can only be called when ui is loaded,
     ));
   }
@@ -40,8 +31,7 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
     emit(LevelGenUILoaded(
       tilesheet: tilesheet!,
       totalTiles: totalTiles,
-      blocksToggleList: blocksToggleList,
-      lastIndex: 0,
+      lastTileIndex: 0,
       currentLayer: state.currentLayer,
     ));
   }
@@ -53,8 +43,7 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         LevelGenUILoaded(
             tilesheet: currentState.tileset!,
             totalTiles: currentState.totalTiles!,
-            blocksToggleList: state.toggleBlocksList!,
-            lastIndex: currentState.lastIndex,
+            lastTileIndex: currentState.lastTileIndex,
             currentLayer: index),
       );
     } else {

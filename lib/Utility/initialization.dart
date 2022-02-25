@@ -2,6 +2,8 @@ import 'package:hive/hive.dart';
 import 'package:not_dashs_adventure/Utility/Repositories/TilesheetLog.dart';
 
 void initForFirstTime(Box<TilesheetLog> box) {
+  final recommendedDefault = List<int>.generate(15, (index) => index);
+  recommendedDefault.add(121);
   final defaultTilesheet = TilesheetLog(
       keyName: "default",
       author: "Siddharth Sinha",
@@ -9,11 +11,11 @@ void initForFirstTime(Box<TilesheetLog> box) {
       customSpriteSheet: false,
       internalPath: "tilesheet.png",
       description: "The default tilesheet used to initialize for the user",
-      recommendedTilesList: List<int>.generate(15, (index) => index),
+      recommendedTilesList: recommendedDefault,
       srcSize: <int>[111, 128],
       tileCategoryMap: Map<String, List<int>>.from(
         {
-          "Green/Foliage Tiles": <int>[0, 11, 12, 15, 17, 26, 27, 28, 29, 31, 38, 66, 67, 68, 69],
+          "Green/Foliage Tiles": <int>[0, 11, 12, 15, 17, 26, 27, 28, 29, 31, 38, 66, 67, 68, 69, 121],
           "Ground/Sand Tiles": <int>[
             1,
             2,

@@ -1,13 +1,11 @@
 part of 'level_gen_ui_cubit.dart';
 
 abstract class LevelGenUiState extends Equatable {
-  const LevelGenUiState(
-      {required this.showUI, this.tileset, this.totalTiles, this.toggleBlocksList, this.currentLayer = 0});
+  const LevelGenUiState({required this.showUI, this.tileset, this.totalTiles, this.currentLayer = 0});
   final bool showUI;
   final int currentLayer;
   final SpriteSheet? tileset;
   final int? totalTiles;
-  final List<bool>? toggleBlocksList;
 }
 
 class LevelGenUILoaded extends LevelGenUiState {
@@ -15,17 +13,11 @@ class LevelGenUILoaded extends LevelGenUiState {
     required SpriteSheet tilesheet,
     required int totalTiles,
     required int currentLayer,
-    required List<bool> blocksToggleList,
-    required this.lastIndex,
-  }) : super(
-            showUI: true,
-            toggleBlocksList: blocksToggleList,
-            tileset: tilesheet,
-            totalTiles: totalTiles,
-            currentLayer: currentLayer);
-  final int lastIndex;
+    required this.lastTileIndex,
+  }) : super(showUI: true, tileset: tilesheet, totalTiles: totalTiles, currentLayer: currentLayer);
+  final int lastTileIndex;
   @override
-  List<Object?> get props => [showUI, tileset, totalTiles, toggleBlocksList, lastIndex, currentLayer];
+  List<Object?> get props => [showUI, tileset, totalTiles, lastTileIndex, currentLayer];
 }
 
 class LevelGenUILoading extends LevelGenUiState {
@@ -36,11 +28,11 @@ class LevelGenUILoading extends LevelGenUiState {
         );
   final bool loading = true;
   @override
-  List<Object?> get props => [showUI, tileset, totalTiles, toggleBlocksList, loading];
+  List<Object?> get props => [showUI, tileset, totalTiles, loading];
 }
 
 class LevelGenUIHide extends LevelGenUiState {
   const LevelGenUIHide({required int currentLayer}) : super(showUI: false, currentLayer: currentLayer);
   @override
-  List<Object?> get props => [showUI, tileset, totalTiles, toggleBlocksList];
+  List<Object?> get props => [showUI, tileset, totalTiles];
 }

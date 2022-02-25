@@ -39,6 +39,12 @@ class DesignerGameState {
       highLightMatrix[lastHighlightBlock.y][lastHighlightBlock.x] = -1;
       highLightMatrix[location.y][location.x] = 117;
       lastHighlightBlock = Vector2Int(x: location.x, y: location.y);
+    } else {
+      _logger.log(Level.SHOUT, '''LevelDesignerGameState:
+      location.x >= 0 : ${location.x >= 0}
+      location.x <= baseMatrix[layerIndex][0].length : ${location.x <= baseMatrix[layerIndex][0].length} 
+      location.y >= 0 :  ${location.y >= 0}
+      location.y <= baseMatrix[layerIndex].length ${location.y <= baseMatrix[layerIndex].length}''');
     }
   }
 
@@ -88,7 +94,7 @@ class DesignerGameState {
       int difference = index - baseMatrix.length + 1;
       while (difference > 0) {
         _logger.log(Level.INFO, "Adding layer to base matrix");
-        baseMatrix.add(List.of(defaultMatrix));
+        baseMatrix.add(List.generate(size, (index) => List.generate(size, (_) => -1)));
         difference--;
       }
       return true;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
+import 'package:not_dashs_adventure/Utility/Repositories/TilesheetRepository.dart';
 
 class BlocksList extends StatelessWidget {
   const BlocksList({Key? key, required Logger logger})
@@ -11,17 +12,25 @@ class BlocksList extends StatelessWidget {
         super(key: key);
   final Logger _logger;
 
-  Future<List<Widget>> getSprites(SpriteSheet tileset, int totalTiles) async {
+  Future<List<Widget>> buildSprites(SpriteSheet tileset, int totalTiles, LevelGenUiCubit cubit) async {
+    final TilesheetRepository _repository = TilesheetRepository();
     List<Widget> sprites = List.empty(growable: true);
-    for (int i = 0; i < totalTiles; i++) {
-      final sprite = tileset.getSpriteById(i);
-      sprites.add(Container(
-          padding: const EdgeInsets.all(2),
-          width: 111 / 3,
-          height: 128 / 3,
-          child: SpriteWidget(
-            sprite: sprite,
-          )));
+    if (_repository.currentTilesheetLog != null) {
+      for (int i in _repository.currentTilesheetLog!.recommendedTilesList) {
+        final sprite = tileset.getSpriteById(i);
+        sprites.add(InkWell(
+          onTap: () {
+            cubit.toggleTile(i);
+          },
+          child: Container(
+              padding: const EdgeInsets.all(2),
+              width: _repository.currentTilesheetLog!.srcSize[0] / 3,
+              height: _repository.currentTilesheetLog!.srcSize[0] / 3,
+              child: SpriteWidget(
+                sprite: sprite,
+              )),
+        ));
+      }
     }
     return sprites;
   }
@@ -37,7 +46,6 @@ class BlocksList extends StatelessWidget {
             (int buttonIndex) {
               BlocProvider.of<LevelGenUiCubit>(context).toggleTile(buttonIndex);
             },
-            state.toggleBlocksList!,
             state,
             context,
           );
@@ -51,10 +59,10 @@ class BlocksList extends StatelessWidget {
   Widget buildBlocks(
     bool showUI,
     Null Function(int buttonIndex) onPressedToggle,
-    List<bool> toggles,
     LevelGenUiState state,
     BuildContext context,
   ) {
+    final cubit = BlocProvider.of<LevelGenUiCubit>(context);
     if (showUI) {
       return Container(
         height: 50,
@@ -67,26 +75,16 @@ class BlocksList extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: FutureBuilder(
-              future: getSprites(state.tileset!, state.totalTiles!),
+              future: buildSprites(state.tileset!, state.totalTiles!, cubit),
               builder: (BuildContext context, AsyncSnapshot<List<Widget>> snapshot) {
                 if (snapshot.hasData) {
-                  return SingleChildScrollView(
+                  return ListView(
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        ToggleButtons(
-                          fillColor: Colors.white24,
-                          borderRadius: BorderRadius.circular(10),
-                          renderBorder: false,
-                          onPressed: onPressedToggle,
-                          children: snapshot.data!,
-                          isSelected: toggles,
-                        ),
-                      ],
-                    ),
+                    shrinkWrap: true,
+                    children: snapshot.data!,
                   );
                 } else if (snapshot.hasError) {
-                  print(snapshot.error);
+                  _logger.log(Level.SEVERE, "UI_BlocksList: Error", snapshot.error);
                   return const SizedBox(
                       height: 10,
                       child: LinearProgressIndicator(

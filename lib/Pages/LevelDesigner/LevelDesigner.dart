@@ -109,7 +109,8 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       }
 
       final block = envLayers[currentUIState.currentLayer].getBlock(screenPosition);
-      _gameState.toggleIndex(Vector2Int(x: block.x, y: block.y), currentUIState.lastIndex, currentUIState.currentLayer);
+      _gameState.toggleIndex(
+          Vector2Int(x: block.x, y: block.y), currentUIState.lastTileIndex, currentUIState.currentLayer);
       print('x : ${block.x} , y : ${block.y}');
     }
     _clickStart = null;
@@ -165,7 +166,7 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
           computeEnvironment(totalLayersBefore);
         }
         _gameState.toggleIndexRangeForLastHighlight(
-            replaceIndex: currentUIState.lastIndex, layerIndex: currentUIState.currentLayer);
+            replaceIndex: currentUIState.lastTileIndex, layerIndex: currentUIState.currentLayer);
       }
       _gameState.resetHighlight();
       _highlight.matrix = _gameState.highLightMatrix;
