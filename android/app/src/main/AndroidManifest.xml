@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sid.nda.not_dashs_adventure">
    <application
-        android:label="not_dashs_adventure"
+        android:label="Iso Worlds"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
