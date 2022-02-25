@@ -49,7 +49,7 @@ class DesignerGameState {
   }
 
   void toggleIndexRangeForLastHighlight({required int replaceIndex, required int layerIndex}) {
-    assert(lastHighlightRange != null);
+    if (lastHighlightRange == null) return;
     checkForLayer(layerIndex);
     for (int i = lastHighlightRange!.lowerY; i <= lastHighlightRange!.higherY; i++) {
       baseMatrix[layerIndex][i].setAll(
