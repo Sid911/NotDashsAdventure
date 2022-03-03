@@ -22,7 +22,7 @@ class TilesheetRepository {
   String currentTilesheetKey = defaultTilesheet;
 
   final Box<TilesheetLog> tileSheetBox = Hive.box<TilesheetLog>("tilesheet");
-  static const String defaultTilesheet = "default";
+  static const String defaultTilesheet = "tutorial";
 
   late Logger logger;
   TilesheetLog? currentTilesheetLog;

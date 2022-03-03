@@ -16,11 +16,11 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   );
   final topLeft = Vector2(0, 0);
 
-  static const srcTileSize = 225.0;
-  static const destTileSize = srcTileSize;
+  static double srcTileSize = 225.0;
+  // static double destTileSize = srcTileSize;
 
   static const halfSize = false;
-  static const tileHeight = 257.0;
+  static double tileHeight = 257.0;
 
   late DesignerGameState _gameState;
   final TilesheetRepository _tilesheetRepository = TilesheetRepository();
@@ -41,19 +41,23 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     camera.setRelativeOffset(Anchor.center);
     camera.speed = 100;
     await super.onLoad();
-    // Load the basic Tileset
+    // Load the basic Tileset and set the state
     final loadedTileset = await _tilesheetRepository.getTileSheet();
     assert(loadedTileset != null);
     _gameState = DesignerGameState(
         gridSpriteIndex: _tilesheetRepository.currentTilesheetLog!.gridIndex,
         highlightSpriteIndex: _tilesheetRepository.currentTilesheetLog!.heightlightIndex);
     tileset = loadedTileset!;
+    // get the src dimension
+    srcTileSize = _tilesheetRepository.currentTilesheetLog!.srcSize[0].toDouble();
+    tileHeight = _tilesheetRepository.currentTilesheetLog!.srcSize[1].toDouble();
+
     // Add TileMaps
     computeEnvironment(0);
     _highlight = IsometricTileMapComponent(
       tileset,
       _gameState.highLightMatrix,
-      destTileSize: Vector2.all(destTileSize),
+      destTileSize: Vector2.all(srcTileSize),
       tileHeight: tileHeight,
       position: topLeft,
       anchor: Anchor.center,
@@ -61,7 +65,7 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     _grid = IsometricTileMapComponent(
       tileset,
       _gameState.gridMatrix,
-      destTileSize: Vector2.all(destTileSize),
+      destTileSize: Vector2.all(srcTileSize),
       tileHeight: tileHeight,
       position: topLeft,
       anchor: Anchor.center,
@@ -70,12 +74,13 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   void computeEnvironment(int initial) {
     for (int i = initial; i < _gameState.baseMatrix.length; i++) {
+      final newPosition = Vector2(-1 * i * srcTileSize, -1 * i * tileHeight);
       envLayers.add(IsometricTileMapComponent(
         tileset,
         _gameState.baseMatrix[i],
-        destTileSize: Vector2.all(destTileSize),
+        destTileSize: Vector2.all(srcTileSize),
         tileHeight: tileHeight,
-        position: topLeft,
+        position: newPosition,
         anchor: Anchor.center,
       ));
     }
