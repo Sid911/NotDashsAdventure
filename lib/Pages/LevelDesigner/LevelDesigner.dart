@@ -58,30 +58,30 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       tileset,
       _gameState.highLightMatrix,
       destTileSize: Vector2.all(srcTileSize),
-      tileHeight: tileHeight,
+      tileHeight: srcTileSize,
       position: topLeft,
-      anchor: Anchor.center,
+      anchor: Anchor.topLeft,
     );
     _grid = IsometricTileMapComponent(
       tileset,
       _gameState.gridMatrix,
       destTileSize: Vector2.all(srcTileSize),
-      tileHeight: tileHeight,
+      tileHeight: srcTileSize,
       position: topLeft,
-      anchor: Anchor.center,
+      anchor: Anchor.topLeft,
     );
   }
 
   void computeEnvironment(int initial) {
     for (int i = initial; i < _gameState.baseMatrix.length; i++) {
-      final newPosition = Vector2(-1 * i * srcTileSize, -1 * i * tileHeight);
+      // final newPosition = Vector2.all(-1 * i * srcTileSize);
       envLayers.add(IsometricTileMapComponent(
         tileset,
         _gameState.baseMatrix[i],
         destTileSize: Vector2.all(srcTileSize),
-        tileHeight: tileHeight,
-        position: newPosition,
-        anchor: Anchor.center,
+        tileHeight: srcTileSize,
+        position: topLeft,
+        anchor: Anchor.topLeft,
       ));
     }
     print("environment length : ${envLayers.length}");
@@ -99,7 +99,7 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     add(_highlight);
     if (debugMode) {
       final double currentfps = fps(100);
-      if (currentfps < 20) fpsTextPaint.render(canvas, currentfps.roundToDouble().toString(), Vector2(0, 120));
+      if (currentfps < 20) fpsTextPaint.render(canvas, currentfps.roundToDouble().toString(), Vector2(0, 200));
       // print(fps(100).toString());
     }
     super.render(canvas);
