@@ -23,7 +23,6 @@ class _TileCategoriesState extends State<TileCategories> {
     final Map<String, List<int>> map = _repository.currentTilesheetLog!.tileCategoryMap;
     final SpriteSheet? spriteSheet = await _repository.getTileSheet(tilesheetName: _repository.currentTilesheetKey);
     final List<Widget> widgets = List<Widget>.empty(growable: true);
-    print(_repository.currentTilesheetLog!.srcSize);
     for (String key in map.keys) {
       widgets.add(Text(
         key,

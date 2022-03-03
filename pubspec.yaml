@@ -42,11 +42,11 @@ dependencies:
   flame_splash_screen: ^0.1.0
   json_annotation: ^4.4.0
   circular_clip_route: ^0.2.0+1
-  bloc: ^8.0.2
+  bloc: ^8.0.3
   flutter_bloc: ^8.0.1
   equatable: ^2.0.3
-  permission_handler: ^8.3.0
-  path_provider: ^2.0.8
+  permission_handler: ^9.2.0
+  path_provider: ^2.0.9
   flame_bloc: ^1.1.0
   sliding_up_panel: ^2.0.0+1
   flutter_number_picker: ^1.0.4
@@ -61,7 +61,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_launcher_icons: ^0.9.2
-  flutter_lints: ^1.0.0
+  flutter_lints: ^1.0.4
   json_serializable: ^6.1.4
   build_runner: ^2.1.7
 
@@ -80,6 +80,7 @@ flutter:
     - assets/images/iso.png
     - assets/images/selector.png
     - assets/images/tilesheet.png
+    - assets/images/tutorialTilesheet.png
     - assets/images/tilesheet_111x111.png
   # To add assets to your application, add an assets section, like this:
   # assets:

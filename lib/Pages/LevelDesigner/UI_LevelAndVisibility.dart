@@ -14,7 +14,8 @@ class LevelAndVisibility extends StatelessWidget {
         return state.showUI && state is LevelGenUILoaded
             ? Container(
                 margin: EdgeInsets.only(left: position.dx, top: position.dy),
-                decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(
+                    color: state.darkMode ? Colors.black54 : Colors.white54, borderRadius: BorderRadius.circular(10)),
                 child: Material(
                   color: Colors.transparent,
                   child: Row(
@@ -24,6 +25,23 @@ class LevelAndVisibility extends StatelessWidget {
                         onValue: (dynamic value) {
                           BlocProvider.of<LevelGenUiCubit>(context).setLayerIndex(value);
                         },
+                        valueTextStyle: TextStyle(color: state.darkMode ? Colors.white : Colors.black, fontSize: 15),
+                        customAddButton: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(
+                            Icons.add,
+                            color: state.darkMode ? Colors.white : Colors.black,
+                            size: 15,
+                          ),
+                        ),
+                        customMinusButton: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(
+                            Icons.remove,
+                            color: state.darkMode ? Colors.white : Colors.black,
+                            size: 15,
+                          ),
+                        ),
                         enable: true,
                         initialValue: state.currentLayer,
                         maxValue: 5,
@@ -33,10 +51,10 @@ class LevelAndVisibility extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.visibility,
                           size: 20,
-                          color: Colors.black,
+                          color: state.darkMode ? Colors.white : Colors.black,
                         ),
                         splashRadius: 20,
                       ),

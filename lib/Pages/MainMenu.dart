@@ -1,4 +1,3 @@
-import 'package:circular_clip_route/circular_clip_route.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +21,7 @@ class _MainMenuState extends State<MainMenu> {
       onPressed: () {
         Navigator.push(
           context,
-          CircularClipRoute(
+          MaterialPageRoute(
             builder: (BuildContext context) => BlocProvider(
               create: (context) => LevelGenUiCubit(),
               child: GameWidget(
@@ -63,7 +62,6 @@ class _MainMenuState extends State<MainMenu> {
                 ],
               ),
             ),
-            expandFrom: context,
           ),
         );
       },

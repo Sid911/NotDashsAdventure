@@ -13,6 +13,8 @@ void initForFirstTime(Box<TilesheetLog> box) {
       description: "The default tilesheet used to initialize for the user",
       recommendedTilesList: recommendedDefault,
       srcSize: <int>[111, 128],
+      gridIndex: 119,
+      heightlightIndex: 119,
       tileCategoryMap: Map<String, List<int>>.from(
         {
           "Green/Foliage Tiles": <int>[0, 11, 12, 15, 17, 26, 27, 28, 29, 31, 38, 66, 67, 68, 69, 121],
@@ -49,5 +51,19 @@ void initForFirstTime(Box<TilesheetLog> box) {
           "Selection Tiles (used for grid etc.)": List<int>.generate(11, (index) => 90 + index),
         },
       ));
+  final tutorialTilesheet = TilesheetLog(
+      keyName: "tutorial",
+      author: "Siddharth Sinha",
+      dateAdded: DateTime.now(),
+      customSpriteSheet: false,
+      internalPath: "tutorialTilesheet.png",
+      description:
+          "This tilesheet is gearbox version with shadows etc. which is used to display tutorial levels in the game",
+      srcSize: [225, 257],
+      gridIndex: 11,
+      heightlightIndex: 10,
+      recommendedTilesList: List.generate(10, (index) => index),
+      tileCategoryMap: {});
   box.put("default", defaultTilesheet);
+  box.put("tutorial", tutorialTilesheet);
 }

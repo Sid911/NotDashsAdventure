@@ -68,8 +68,8 @@ class BlocksList extends StatelessWidget {
         height: 50,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: Colors.black26,
-          border: Border.all(),
+          // color: Colors.black26,
+          // border: Border.all(),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Material(

@@ -23,17 +23,19 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
       customSpriteSheet: fields[3] as bool,
       internalPath: fields[4] as String,
       description: fields[5] as String,
-      recommendedTilesList: (fields[6] as List<int>),
-      tileCategoryMap:
-          (fields[7] as Map<dynamic, dynamic>).map((dynamic k, dynamic v) => MapEntry(k as String, v as List<int>)),
-      srcSize: (fields[8] as List<int>),
+      recommendedTilesList: (fields[6] as List).cast<int>(),
+      tileCategoryMap: (fields[7] as Map).map((dynamic k, dynamic v) =>
+          MapEntry(k as String, (v as List).cast<int>())),
+      srcSize: (fields[8] as List).cast<int>(),
+      gridIndex: fields[9] as int,
+      heightlightIndex: fields[10] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, TilesheetLog obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.keyName)
       ..writeByte(1)
@@ -51,7 +53,11 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
       ..writeByte(7)
       ..write(obj.tileCategoryMap)
       ..writeByte(8)
-      ..write(obj.srcSize);
+      ..write(obj.srcSize)
+      ..writeByte(9)
+      ..write(obj.gridIndex)
+      ..writeByte(10)
+      ..write(obj.heightlightIndex);
   }
 
   @override
@@ -60,5 +66,7 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TilesheetLogAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is TilesheetLogAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

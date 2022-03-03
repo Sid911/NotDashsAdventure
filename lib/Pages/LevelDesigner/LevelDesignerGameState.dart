@@ -4,12 +4,15 @@ import 'package:logging/logging.dart';
 import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 
 class DesignerGameState {
-  DesignerGameState({this.size = 20})
-      : defaultMatrix = List.generate(size, (index) => List.generate(size, (_) => -1)),
+  DesignerGameState({
+    required this.gridSpriteIndex,
+    required this.highlightSpriteIndex,
+    this.size = 20,
+  })  : defaultMatrix = List.generate(size, (index) => List.generate(size, (_) => -1)),
         baseMatrix = List.generate(1, (_) => List.generate(size, (_) => List.generate(size, (_) => -1))),
-        gridMatrix = List.generate(size, (index) => List.generate(size, (_) => 119)) {
+        gridMatrix = List.generate(size, (index) => List.generate(size, (_) => gridSpriteIndex)) {
     highLightMatrix = List.from(defaultMatrix);
-    highLightMatrix[0][0] = 115;
+    highLightMatrix[0][0] = highlightSpriteIndex;
   }
 
   /// logger for the State
@@ -17,6 +20,8 @@ class DesignerGameState {
 
   /// m and n for the square matrices [baseMatrix] and [highlightMatrix] and [gridMatrix]
   int size;
+  final int gridSpriteIndex;
+  final int highlightSpriteIndex;
   bool isSavedBefore = false;
   bool isLoaded = false;
 
@@ -73,7 +78,7 @@ class DesignerGameState {
     for (int i = minY; i <= maxY; i++) {
       highLightMatrix[i] = List<int>.generate(size, (index) => -1);
       if (i >= h.lowerY && i <= h.higherY) {
-        highLightMatrix[i].setAll(h.lowerX - 1, List<int>.filled(h.higherX - h.lowerX + 1, 117));
+        highLightMatrix[i].setAll(h.lowerX - 1, List<int>.filled(h.higherX - h.lowerX + 1, highlightSpriteIndex));
       }
     }
     lastHighlightRange = h;

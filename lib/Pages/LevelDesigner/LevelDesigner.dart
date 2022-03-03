@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 import 'package:flame_bloc/flame_bloc.dart';
@@ -15,13 +16,13 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   );
   final topLeft = Vector2(0, 0);
 
-  static const srcTileSize = 111.0;
+  static const srcTileSize = 225.0;
   static const destTileSize = srcTileSize;
 
   static const halfSize = false;
-  static const tileHeight = 128.0;
+  static const tileHeight = 257.0;
 
-  final DesignerGameState _gameState = DesignerGameState();
+  late DesignerGameState _gameState;
   final TilesheetRepository _tilesheetRepository = TilesheetRepository();
   DateTime? _clickStart;
   bool _clickHeld = false;
@@ -41,10 +42,11 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     camera.speed = 100;
     await super.onLoad();
     // Load the basic Tileset
-    print("starting load");
     final loadedTileset = await _tilesheetRepository.getTileSheet();
     assert(loadedTileset != null);
-    print("Tileset loaded");
+    _gameState = DesignerGameState(
+        gridSpriteIndex: _tilesheetRepository.currentTilesheetLog!.gridIndex,
+        highlightSpriteIndex: _tilesheetRepository.currentTilesheetLog!.heightlightIndex);
     tileset = loadedTileset!;
     // Add TileMaps
     computeEnvironment(0);
@@ -82,6 +84,9 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   @override
   void render(Canvas canvas) {
+    if (read<LevelGenUiCubit>().state.darkMode) {
+      canvas.drawPaint(BasicPalette.white.paint());
+    }
     add(_grid);
     for (int i = 0; i < envLayers.length; i++) {
       add(envLayers[i]);

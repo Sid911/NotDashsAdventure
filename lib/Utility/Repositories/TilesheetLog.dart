@@ -14,6 +14,8 @@ class TilesheetLog {
     required this.recommendedTilesList,
     required this.tileCategoryMap,
     required this.srcSize,
+    required this.gridIndex,
+    required this.heightlightIndex,
   }) : assert(srcSize.length == 2);
   @HiveField(0)
   final String keyName;
@@ -33,4 +35,8 @@ class TilesheetLog {
   Map<String, List<int>> tileCategoryMap;
   @HiveField(8)
   List<int> srcSize;
+  @HiveField(9)
+  int gridIndex;
+  @HiveField(10)
+  int heightlightIndex;
 }
