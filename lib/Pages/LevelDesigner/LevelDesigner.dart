@@ -27,7 +27,9 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   late DesignerGameState _gameState;
   final TilesheetRepository _tilesheetRepository = TilesheetRepository();
   DateTime? _clickStart;
+
   bool _clickHeld = false;
+  bool reRenderBackground = false;
 
   List<IsometricTileMapComponent> envLayers = List<IsometricTileMapComponent>.empty(growable: true);
   late IsometricTileMapComponent _highlight;
@@ -56,8 +58,6 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       srcTileSize = _tilesheetRepository.currentTilesheetLog!.srcSize[0].toDouble();
       tileHeight = _tilesheetRepository.currentTilesheetLog!.srcSize[1].toDouble();
     }
-    // get height and width and assign paint
-    assignBackground();
     // Add TileMaps
     computeEnvironment(0);
     _highlight = IsometricTileMapComponent(
@@ -76,6 +76,14 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       position: topLeft,
       anchor: Anchor.topLeft,
     );
+  }
+
+  @override
+  void onAttach() {
+    super.onAttach();
+    // get height and width and assign paint
+    final mUIState = read<LevelGenUiCubit>().state;
+    assignBackground(startingColor: mUIState.backgroundBeginColor, endingColor: mUIState.backgroundEndColor);
   }
 
   void computeEnvironment(int initial) {
@@ -112,10 +120,13 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   @override
   void render(Canvas canvas) {
-    if (read<LevelGenUiCubit>().state.darkMode) {
-      // canvas.drawPaint(BasicPalette.white.paint());
-      canvas.drawRect(rect, backgroundPaint);
+    if (reRenderBackground) {
+      print("rendering Background");
+      final state = read<LevelGenUiCubit>().state;
+      assignBackground(startingColor: state.backgroundBeginColor, endingColor: state.backgroundEndColor);
+      reRenderBackground = false;
     }
+    canvas.drawRect(rect, backgroundPaint);
     add(_grid);
     for (int i = 0; i < envLayers.length; i++) {
       add(envLayers[i]);

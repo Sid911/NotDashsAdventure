@@ -1,41 +1,57 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flame/sprite.dart';
+import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:not_dashs_adventure/Utility/Repositories/TilesheetRepository.dart';
 
 part './level_gen_ui_state.dart';
 
 class LevelGenUiCubit extends Cubit<LevelGenUiState> {
-  LevelGenUiCubit() : super(const LevelGenUIHide(currentLayer: 0, darkMode: false));
+  LevelGenUiCubit()
+      : super(LevelGenUIHide(
+          currentLayer: 0,
+          darkMode: false,
+          backgroundBegin: Colors.black,
+          backgroundEnd: Colors.grey.shade900,
+        ));
   TilesheetRepository repository = TilesheetRepository();
   final Logger _logger = Logger("LeveL Genration UI");
 
   void toggleTile(int index) {
     emit(LevelGenUILoaded(
-        tilesheet: state.tileset!,
-        totalTiles: state.totalTiles!,
-        lastTileIndex: index,
-        currentLayer:
-            (state as LevelGenUILoaded).currentLayer, // we know that this can only be called when ui is loaded,
-        darkMode: state.darkMode));
+      tilesheet: state.tileset!,
+      totalTiles: state.totalTiles!,
+      lastTileIndex: index,
+      currentLayer: (state as LevelGenUILoaded).currentLayer, // we know that this can only be called when ui is loaded,
+      darkMode: state.darkMode, backgroundEndColor: state.backgroundEndColor,
+      backgroundBeginColor: state.backgroundBeginColor,
+      showSettings: false,
+    ));
   }
 
   void loadUI() async {
     //loading UI
-    emit(LevelGenUILoading(currentLayer: state.currentLayer, darkMode: state.darkMode));
+    emit(LevelGenUILoading(
+      currentLayer: state.currentLayer,
+      darkMode: state.darkMode,
+      backgroundBegin: state.backgroundBeginColor,
+      backgroundEnd: state.backgroundEndColor,
+    ));
     final tilesheet = await repository.getTileSheet();
     final totalTiles = repository.currentTilesheetLog!.recommendedTilesList.length;
     final blocksToggleList = List<bool>.filled(totalTiles, false);
     blocksToggleList.first = true;
     // UI loaded
     emit(LevelGenUILoaded(
-      tilesheet: tilesheet!,
-      totalTiles: totalTiles,
-      lastTileIndex: 0,
-      currentLayer: state.currentLayer,
-      darkMode: state.darkMode,
-    ));
+        tilesheet: tilesheet!,
+        totalTiles: totalTiles,
+        lastTileIndex: 0,
+        currentLayer: state.currentLayer,
+        darkMode: state.darkMode,
+        backgroundBeginColor: state.darkMode ? Colors.white : Colors.black,
+        backgroundEndColor: state.darkMode ? Colors.grey : Colors.grey.shade900,
+        showSettings: state.showSettings));
   }
 
   void setLayerIndex(int index) {
@@ -48,6 +64,9 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
           lastTileIndex: currentState.lastTileIndex,
           currentLayer: index,
           darkMode: currentState.darkMode,
+          backgroundEndColor: currentState.backgroundEndColor,
+          backgroundBeginColor: currentState.backgroundBeginColor,
+          showSettings: false,
         ),
       );
     } else {
@@ -63,12 +82,89 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         totalTiles: currentState.totalTiles!,
         currentLayer: currentState.currentLayer,
         lastTileIndex: currentState.lastTileIndex,
+        backgroundBeginColor: value ? Colors.white : Colors.black,
+        backgroundEndColor: value ? Colors.grey : Colors.grey.shade900,
         darkMode: value,
+        showSettings: currentState.showSettings,
       ));
     }
   }
 
+  void setBackgroundGradientBeginColor(Color color) {
+    if (state is LevelGenUILoaded) {
+      final currentState = state as LevelGenUILoaded;
+      emit(LevelGenUILoaded(
+        tilesheet: currentState.tileset!,
+        totalTiles: currentState.totalTiles!,
+        currentLayer: currentState.currentLayer,
+        lastTileIndex: currentState.lastTileIndex,
+        backgroundBeginColor: color,
+        backgroundEndColor: currentState.backgroundEndColor,
+        darkMode: currentState.darkMode,
+        showSettings: currentState.showSettings,
+      ));
+    }
+  }
+
+  void setBackgroundGradientEndColor(Color color) {
+    if (state is LevelGenUILoaded) {
+      final currentState = state as LevelGenUILoaded;
+      emit(LevelGenUILoaded(
+        tilesheet: currentState.tileset!,
+        totalTiles: currentState.totalTiles!,
+        currentLayer: currentState.currentLayer,
+        lastTileIndex: currentState.lastTileIndex,
+        backgroundBeginColor: currentState.backgroundBeginColor,
+        backgroundEndColor: color,
+        darkMode: currentState.darkMode,
+        showSettings: currentState.showSettings,
+      ));
+    }
+  }
+
+  void hideSettings() {
+    if (state is LevelGenUILoaded) {
+      final currentState = state as LevelGenUILoaded;
+      emit(
+        LevelGenUILoaded(
+          tilesheet: currentState.tileset!,
+          totalTiles: currentState.totalTiles!,
+          lastTileIndex: currentState.lastTileIndex,
+          currentLayer: currentState.currentLayer,
+          darkMode: currentState.darkMode,
+          backgroundEndColor: currentState.backgroundEndColor,
+          backgroundBeginColor: currentState.backgroundBeginColor,
+          showSettings: false,
+        ),
+      );
+    }
+  }
+
+  void showSettings() {
+    if (state is LevelGenUILoaded) {
+      final currentState = state as LevelGenUILoaded;
+      emit(
+        LevelGenUILoaded(
+          tilesheet: currentState.tileset!,
+          totalTiles: currentState.totalTiles!,
+          lastTileIndex: currentState.lastTileIndex,
+          currentLayer: currentState.currentLayer,
+          darkMode: currentState.darkMode,
+          backgroundEndColor: currentState.backgroundEndColor,
+          backgroundBeginColor: currentState.backgroundBeginColor,
+          showSettings: true,
+        ),
+      );
+    }
+  }
+
   void hideUI() {
-    emit(LevelGenUIHide(currentLayer: state.currentLayer, darkMode: state.darkMode));
+    emit(
+      LevelGenUIHide(
+          currentLayer: state.currentLayer,
+          darkMode: state.darkMode,
+          backgroundBegin: state.backgroundBeginColor,
+          backgroundEnd: state.backgroundEndColor),
+    );
   }
 }

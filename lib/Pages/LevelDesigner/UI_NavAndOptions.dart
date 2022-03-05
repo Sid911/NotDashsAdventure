@@ -34,8 +34,8 @@ class NavAndOptions extends StatelessWidget {
                       color: state.darkMode ? Colors.white : Colors.black,
                     )),
                 getShowUIButton(state.showUI, context, state.darkMode),
-                getSettingsButton(context, state.darkMode),
-                getDeleteButton(state.showUI, context, state.darkMode),
+                if (state.showUI) getSettingsButton(context, state.darkMode),
+                if (state.showUI) getDeleteButton(context, state.darkMode),
               ],
             ),
           );
@@ -71,25 +71,23 @@ class NavAndOptions extends StatelessWidget {
   }
 }
 
-Widget getDeleteButton(bool showUI, BuildContext context, darkMode) {
-  return showUI
-      ? IconButton(
-          onPressed: () {
-            BlocProvider.of<LevelGenUiCubit>(context).toggleTile(-1);
-          },
-          icon: Icon(
-            Icons.delete,
-            size: 20,
-            color: darkMode ? Colors.white : Colors.black,
-          ))
-      : Container();
+Widget getDeleteButton(BuildContext context, bool darkMode) {
+  return IconButton(
+      onPressed: () {
+        BlocProvider.of<LevelGenUiCubit>(context).toggleTile(-1);
+      },
+      icon: Icon(
+        Icons.delete,
+        size: 20,
+        color: darkMode ? Colors.white : Colors.black,
+      ));
 }
 
 Widget getSettingsButton(BuildContext context, bool darkMode) {
   return IconButton(
       onPressed: () {
         final levelGenCubit = BlocProvider.of<LevelGenUiCubit>(context);
-        levelGenCubit.setDarkMode(!darkMode);
+        levelGenCubit.showSettings();
       },
       icon: Icon(
         Icons.settings,

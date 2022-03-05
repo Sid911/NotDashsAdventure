@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BottomSelector.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_DesignerSettings.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_LevelAndVisibility.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_NavAndOptions.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
@@ -38,11 +39,6 @@ class _MainMenuState extends State<MainMenu> {
                   'options': (context, _) {
                     return const NavAndOptions();
                   },
-                  // "blocksList": (context, _) {
-                  //   return BlocksList(
-                  //     logger: Logger("Blocks List UI"),
-                  //   );
-                  // },
                   "saveAndTest": (context, _) {
                     return const SaveAndTest();
                   },
@@ -51,14 +47,19 @@ class _MainMenuState extends State<MainMenu> {
                   },
                   "bottomSelector": (context, _) {
                     return const BottomSelector();
-                  }
+                  },
+                  'settings': (context, LevelDesigner designer) {
+                    return DesignerSettings(
+                      designer: designer,
+                    );
+                  },
                 },
                 initialActiveOverlays: const [
                   "options",
-                  // "blocksList",
                   "saveAndTest",
                   "levelAndVisibility",
-                  "bottomSelector"
+                  "bottomSelector",
+                  "settings",
                 ],
               ),
             ),
