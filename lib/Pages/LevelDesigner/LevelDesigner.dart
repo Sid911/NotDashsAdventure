@@ -14,6 +14,8 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   static final fpsTextPaint = TextPaint(
     style: const TextStyle(color: Color(0xFFFF0000)),
   );
+  final backgroundPaint = Paint();
+  late Rect rect;
   final topLeft = Vector2(0, 0);
 
   static double srcTileSize = 225.0;
@@ -33,6 +35,7 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   late Vector2 startPosition;
   late SpriteSheet tileset;
+
   @override
   bool debugMode = true;
 
@@ -42,16 +45,19 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     camera.speed = 100;
     await super.onLoad();
     // Load the basic Tileset and set the state
-    final loadedTileset = await _tilesheetRepository.getTileSheet();
-    assert(loadedTileset != null);
-    _gameState = DesignerGameState(
-        gridSpriteIndex: _tilesheetRepository.currentTilesheetLog!.gridIndex,
-        highlightSpriteIndex: _tilesheetRepository.currentTilesheetLog!.heightlightIndex);
-    tileset = loadedTileset!;
-    // get the src dimension
-    srcTileSize = _tilesheetRepository.currentTilesheetLog!.srcSize[0].toDouble();
-    tileHeight = _tilesheetRepository.currentTilesheetLog!.srcSize[1].toDouble();
-
+    {
+      final loadedTileset = await _tilesheetRepository.getTileSheet();
+      assert(loadedTileset != null);
+      _gameState = DesignerGameState(
+          gridSpriteIndex: _tilesheetRepository.currentTilesheetLog!.gridIndex,
+          highlightSpriteIndex: _tilesheetRepository.currentTilesheetLog!.heightlightIndex);
+      tileset = loadedTileset!;
+      // get the src dimension
+      srcTileSize = _tilesheetRepository.currentTilesheetLog!.srcSize[0].toDouble();
+      tileHeight = _tilesheetRepository.currentTilesheetLog!.srcSize[1].toDouble();
+    }
+    // get height and width and assign paint
+    assignBackground();
     // Add TileMaps
     computeEnvironment(0);
     _highlight = IsometricTileMapComponent(
@@ -87,10 +93,28 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     print("environment length : ${envLayers.length}");
   }
 
+  void assignBackground({
+    Color startingColor = Colors.white,
+    Color endingColor = Colors.grey,
+    Alignment beginAlignment = Alignment.topCenter,
+    Alignment endAlignment = Alignment.bottomCenter,
+  }) {
+    rect = Rect.fromLTWH(0, 0, size.x, size.y);
+    backgroundPaint.shader = LinearGradient(
+      colors: [
+        startingColor,
+        endingColor,
+      ],
+      begin: beginAlignment,
+      end: endAlignment,
+    ).createShader(rect);
+  }
+
   @override
   void render(Canvas canvas) {
     if (read<LevelGenUiCubit>().state.darkMode) {
-      canvas.drawPaint(BasicPalette.white.paint());
+      // canvas.drawPaint(BasicPalette.white.paint());
+      canvas.drawRect(rect, backgroundPaint);
     }
     add(_grid);
     for (int i = 0; i < envLayers.length; i++) {

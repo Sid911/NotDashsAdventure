@@ -50,6 +50,7 @@ dependencies:
   flame_bloc: ^1.1.0
   sliding_up_panel: ^2.0.0+1
   flutter_number_picker: ^1.0.4
+  flutter_colorpicker: ^1.0.3
 
 dev_dependencies:
   flutter_test:
