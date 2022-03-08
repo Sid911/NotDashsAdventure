@@ -82,19 +82,21 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                           ),
                         ],
                       ),
-                      ListTile(
-                        title: const Text(
-                          "Background Settings",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                        textColor: state.darkMode ? Colors.white : Colors.black,
-                      ),
                       Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            child: Text(
+                              "Background Settings",
+                              style: TextStyle(fontSize: 13, color: state.darkMode ? Colors.white : Colors.black),
+                            ),
+                          ),
                           CustomAccentButton(
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.symmetric(horizontal: 30),
+                            backgroundColor: state.darkMode ? Colors.black : Colors.white,
                             tapUpFunction: () {
                               showDialog(
                                   context: context,
@@ -138,9 +140,6 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                                 )
                               ],
                             ),
-                            padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.symmetric(horizontal: 30),
-                            backgroundColor: state.darkMode ? Colors.black : Colors.white,
                           ),
                           CustomAccentButton(
                               tapUpFunction: () {
