@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/ResourceType.dart';
 import 'package:not_dashs_adventure/Utility/Repositories/TilesheetRepository.dart';
 
 part './level_gen_ui_state.dart';
@@ -155,6 +156,23 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
           showSettings: true,
         ),
       );
+    }
+  }
+
+  void setResourceType(ResourceType type) {
+    if (state is LevelGenUILoaded) {
+      final currentState = state as LevelGenUILoaded;
+      emit(LevelGenUILoaded(
+        tilesheet: currentState.tileset!,
+        totalTiles: currentState.totalTiles!,
+        lastTileIndex: currentState.lastTileIndex,
+        currentLayer: currentState.currentLayer,
+        darkMode: currentState.darkMode,
+        backgroundEndColor: currentState.backgroundEndColor,
+        backgroundBeginColor: currentState.backgroundBeginColor,
+        showSettings: true,
+        resourceType: type,
+      ));
     }
   }
 

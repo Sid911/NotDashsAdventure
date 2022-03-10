@@ -8,7 +8,7 @@ class LevelAndVisibility extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final position = MediaQuery.of(context).size.topLeft(const Offset(0, 70));
+    final position = MediaQuery.of(context).size.topLeft(const Offset(0, 130));
     return BlocBuilder<LevelGenUiCubit, LevelGenUiState>(
       builder: (context, state) {
         return state.showUI && state is LevelGenUILoaded
@@ -26,20 +26,26 @@ class LevelAndVisibility extends StatelessWidget {
                           BlocProvider.of<LevelGenUiCubit>(context).setLayerIndex(value);
                         },
                         valueTextStyle: TextStyle(color: state.darkMode ? Colors.white : Colors.black, fontSize: 15),
-                        customAddButton: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Icon(
-                            Icons.add,
-                            color: state.darkMode ? Colors.white : Colors.black,
-                            size: 15,
+                        customAddButton: Tooltip(
+                          message: "Increase level",
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Icon(
+                              Icons.add,
+                              color: state.darkMode ? Colors.white : Colors.black,
+                              size: 15,
+                            ),
                           ),
                         ),
-                        customMinusButton: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Icon(
-                            Icons.remove,
-                            color: state.darkMode ? Colors.white : Colors.black,
-                            size: 15,
+                        customMinusButton: Tooltip(
+                          message: "Decrease Level",
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Icon(
+                              Icons.remove,
+                              color: state.darkMode ? Colors.white : Colors.black,
+                              size: 15,
+                            ),
                           ),
                         ),
                         enable: true,
@@ -51,6 +57,7 @@ class LevelAndVisibility extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {},
+                        tooltip: "See only current Level",
                         icon: Icon(
                           Icons.visibility,
                           size: 20,

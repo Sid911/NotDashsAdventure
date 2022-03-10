@@ -31,6 +31,7 @@ class LevelGenUILoaded extends LevelGenUiState {
     required Color backgroundBeginColor,
     required Color backgroundEndColor,
     required bool showSettings,
+    this.resourceType = ResourceType.tile,
   }) : super(
           showUI: true,
           showSettings: showSettings,
@@ -42,6 +43,7 @@ class LevelGenUILoaded extends LevelGenUiState {
           backgroundEndColor: backgroundEndColor,
         );
   final int lastTileIndex;
+  final ResourceType resourceType;
   @override
   List<Object?> get props => [
         showUI,
@@ -52,7 +54,8 @@ class LevelGenUILoaded extends LevelGenUiState {
         darkMode,
         backgroundBeginColor,
         backgroundEndColor,
-        showSettings
+        showSettings,
+        resourceType,
       ];
 }
 

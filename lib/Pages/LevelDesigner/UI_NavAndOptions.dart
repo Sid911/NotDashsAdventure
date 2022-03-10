@@ -25,6 +25,7 @@ class NavAndOptions extends StatelessWidget {
               semanticChildCount: 2,
               children: [
                 IconButton(
+                    tooltip: "Go back to main menu",
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -47,6 +48,7 @@ class NavAndOptions extends StatelessWidget {
   Widget getShowUIButton(bool showUI, BuildContext context, bool darkMode) {
     if (showUI) {
       return IconButton(
+          tooltip: "Hide the GUI",
           onPressed: () {
             final levelGenCubit = BlocProvider.of<LevelGenUiCubit>(context);
             levelGenCubit.hideUI();
@@ -58,6 +60,7 @@ class NavAndOptions extends StatelessWidget {
           ));
     } else {
       return IconButton(
+          tooltip: "View the GUI",
           onPressed: () {
             final levelGenCubit = BlocProvider.of<LevelGenUiCubit>(context);
             levelGenCubit.loadUI();
@@ -73,6 +76,7 @@ class NavAndOptions extends StatelessWidget {
 
 Widget getDeleteButton(BuildContext context, bool darkMode) {
   return IconButton(
+      tooltip: "Delete Resource from the current Layer",
       onPressed: () {
         BlocProvider.of<LevelGenUiCubit>(context).toggleTile(-1);
       },

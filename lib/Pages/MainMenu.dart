@@ -7,6 +7,7 @@ import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_DesignerSettings.dart
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_LevelAndVisibility.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_NavAndOptions.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_ResourceSelector.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_SaveAndTest.dart';
 
 class MainMenu extends StatefulWidget {
@@ -53,12 +54,16 @@ class _MainMenuState extends State<MainMenu> {
                       designer: designer,
                     );
                   },
+                  'resourceSelector': (BuildContext context, LevelDesigner designer) {
+                    return const ResourceSelector();
+                  }
                 },
                 initialActiveOverlays: const [
                   "options",
                   "saveAndTest",
                   "levelAndVisibility",
                   "bottomSelector",
+                  'resourceSelector',
                   "settings",
                 ],
               ),
