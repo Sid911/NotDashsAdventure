@@ -28,14 +28,15 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
           MapEntry(k as String, (v as List).cast<int>())),
       srcSize: (fields[8] as List).cast<int>(),
       gridIndex: fields[9] as int,
-      heightlightIndex: fields[10] as int,
+      highlightIndex: fields[10] as int,
+      puzzlePieceSize: (fields[11] as List).cast<int>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, TilesheetLog obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.keyName)
       ..writeByte(1)
@@ -57,7 +58,9 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
       ..writeByte(9)
       ..write(obj.gridIndex)
       ..writeByte(10)
-      ..write(obj.heightlightIndex);
+      ..write(obj.highlightIndex)
+      ..writeByte(11)
+      ..write(obj.puzzlePieceSize);
   }
 
   @override
@@ -70,3 +73,45 @@ class TilesheetLogAdapter extends TypeAdapter<TilesheetLog> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+TilesheetLog _$TilesheetLogFromJson(Map<String, dynamic> json) => TilesheetLog(
+      keyName: json['keyName'] as String,
+      author: json['author'] as String,
+      dateAdded: DateTime.parse(json['dateAdded'] as String),
+      customSpriteSheet: json['customSpriteSheet'] as bool,
+      internalPath: json['internalPath'] as String,
+      description: json['description'] as String,
+      recommendedTilesList: (json['recommendedTilesList'] as List<dynamic>)
+          .map((e) => e as int)
+          .toList(),
+      tileCategoryMap: (json['tileCategoryMap'] as Map<String, dynamic>).map(
+        (k, e) =>
+            MapEntry(k, (e as List<dynamic>).map((e) => e as int).toList()),
+      ),
+      srcSize: (json['srcSize'] as List<dynamic>).map((e) => e as int).toList(),
+      gridIndex: json['gridIndex'] as int,
+      highlightIndex: json['highlightIndex'] as int,
+      puzzlePieceSize: (json['puzzlePieceSize'] as List<dynamic>)
+          .map((e) => e as int)
+          .toList(),
+    );
+
+Map<String, dynamic> _$TilesheetLogToJson(TilesheetLog instance) =>
+    <String, dynamic>{
+      'keyName': instance.keyName,
+      'author': instance.author,
+      'dateAdded': instance.dateAdded.toIso8601String(),
+      'customSpriteSheet': instance.customSpriteSheet,
+      'internalPath': instance.internalPath,
+      'description': instance.description,
+      'recommendedTilesList': instance.recommendedTilesList,
+      'tileCategoryMap': instance.tileCategoryMap,
+      'srcSize': instance.srcSize,
+      'gridIndex': instance.gridIndex,
+      'highlightIndex': instance.highlightIndex,
+      'puzzlePieceSize': instance.puzzlePieceSize,
+    };

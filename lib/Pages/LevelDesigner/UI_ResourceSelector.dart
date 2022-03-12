@@ -27,7 +27,9 @@ class ResourceSelector extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       children: [
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              BlocProvider.of<LevelGenUiCubit>(context).setResourceType(ResourceType.tile);
+                            },
                             splashRadius: 20,
                             tooltip: "Tile Pieces",
                             icon: Icon(
@@ -36,7 +38,9 @@ class ResourceSelector extends StatelessWidget {
                               color: state.darkMode ? Colors.white : Colors.black,
                             )),
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              BlocProvider.of<LevelGenUiCubit>(context).setResourceType(ResourceType.puzzle);
+                            },
                             splashRadius: 20,
                             tooltip: "Puzzle Pieces",
                             icon: Icon(

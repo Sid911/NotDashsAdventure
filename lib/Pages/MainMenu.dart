@@ -43,8 +43,8 @@ class _MainMenuState extends State<MainMenu> {
                   "saveAndTest": (context, _) {
                     return const SaveAndTest();
                   },
-                  "levelAndVisibility": (context, _) {
-                    return const LevelAndVisibility();
+                  "levelAndVisibility": (context, LevelDesigner designer) {
+                    return LevelAndVisibility(designer: designer);
                   },
                   "bottomSelector": (context, _) {
                     return const BottomSelector();

@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
-import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 import 'package:flame_bloc/flame_bloc.dart';
@@ -9,6 +9,8 @@ import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesignerGameState.dart';
 import 'package:not_dashs_adventure/Utility/Repositories/TilesheetRepository.dart';
 import 'package:not_dashs_adventure/Utility/VectorInt.dart';
+
+import '../Components/IsometricTileMapCustom.dart';
 
 class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, ScaleDetector, FPSCounter {
   static final fpsTextPaint = TextPaint(
@@ -23,6 +25,9 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   static const halfSize = false;
   static double tileHeight = 257.0;
+  // effects
+  MoveEffect upForLayer = MoveEffect.by(Vector2(-60, -60), EffectController(duration: 0.25));
+  MoveEffect downForLayer = MoveEffect.by(Vector2(60, 60), EffectController(duration: 0.25));
 
   late DesignerGameState _gameState;
   final TilesheetRepository _tilesheetRepository = TilesheetRepository();
@@ -31,9 +36,9 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   bool _clickHeld = false;
   bool reRenderBackground = false;
 
-  List<IsometricTileMapComponent> envLayers = List<IsometricTileMapComponent>.empty(growable: true);
-  late IsometricTileMapComponent _highlight;
-  late IsometricTileMapComponent _grid;
+  List<IsometricTileMapCustom> envLayers = List<IsometricTileMapCustom>.empty(growable: true);
+  late IsometricTileMapCustom _highlight;
+  late IsometricTileMapCustom _grid;
 
   late Vector2 startPosition;
   late SpriteSheet tileset;
@@ -52,26 +57,35 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       assert(loadedTileset != null);
       _gameState = DesignerGameState(
           gridSpriteIndex: _tilesheetRepository.currentTilesheetLog!.gridIndex,
-          highlightSpriteIndex: _tilesheetRepository.currentTilesheetLog!.heightlightIndex);
+          highlightSpriteIndex: _tilesheetRepository.currentTilesheetLog!.highlightIndex);
       tileset = loadedTileset!;
       // get the src dimension
       srcTileSize = _tilesheetRepository.currentTilesheetLog!.srcSize[0].toDouble();
       tileHeight = _tilesheetRepository.currentTilesheetLog!.srcSize[1].toDouble();
+
+      upForLayer = MoveEffect.by(
+        Vector2(-srcTileSize / 2, -tileHeight * 3 / 4),
+        EffectController(duration: 0.25),
+      );
+      downForLayer = MoveEffect.by(
+        Vector2(srcTileSize / 2, tileHeight * 3 / 4),
+        EffectController(duration: 0.25),
+      );
     }
     // Add TileMaps
     computeEnvironment(0);
-    _highlight = IsometricTileMapComponent(
+    _highlight = IsometricTileMapCustom(
       tileset,
       _gameState.highLightMatrix,
-      destTileSize: Vector2.all(srcTileSize),
+      scalingFactor: 1.1538461538461538461538461538462,
       tileHeight: srcTileSize,
       position: topLeft,
       anchor: Anchor.topLeft,
     );
-    _grid = IsometricTileMapComponent(
+    _grid = IsometricTileMapCustom(
       tileset,
       _gameState.gridMatrix,
-      destTileSize: Vector2.all(srcTileSize),
+      scalingFactor: 1.1538461538461538461538461538462,
       tileHeight: srcTileSize,
       position: topLeft,
       anchor: Anchor.topLeft,
@@ -88,13 +102,15 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   void computeEnvironment(int initial) {
     for (int i = initial; i < _gameState.baseMatrix.length; i++) {
-      // final newPosition = Vector2.all(-1 * i * srcTileSize);
-      envLayers.add(IsometricTileMapComponent(
+      final newPosition = Vector2(-1 * i * srcTileSize / 2, -3 / 4 * i * tileHeight);
+      envLayers.add(IsometricTileMapCustom(
         tileset,
         _gameState.baseMatrix[i],
-        destTileSize: Vector2.all(srcTileSize),
-        tileHeight: srcTileSize,
-        position: topLeft,
+        priority: i,
+        angle: 0,
+        tileHeight: tileHeight,
+        scalingFactor: 1.1538461538461538461538461538462,
+        position: newPosition,
         anchor: Anchor.topLeft,
       ));
     }
@@ -116,6 +132,12 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       begin: beginAlignment,
       end: endAlignment,
     ).createShader(rect);
+  }
+
+  void moveGridForLayer(bool up) {
+    print("moving Grid : $up}");
+    up ? _grid.add(upForLayer) : _grid.add(downForLayer);
+    up ? _highlight.add(upForLayer) : _highlight.add(downForLayer);
   }
 
   @override

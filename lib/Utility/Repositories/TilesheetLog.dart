@@ -1,7 +1,9 @@
 import 'package:hive/hive.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'TilesheetLog.g.dart';
 
+@JsonSerializable()
 @HiveType(typeId: 1, adapterName: 'TilesheetLogAdapter')
 class TilesheetLog {
   TilesheetLog({
@@ -15,8 +17,10 @@ class TilesheetLog {
     required this.tileCategoryMap,
     required this.srcSize,
     required this.gridIndex,
-    required this.heightlightIndex,
-  }) : assert(srcSize.length == 2);
+    required this.highlightIndex,
+    required this.puzzlePieceSize,
+  })  : assert(srcSize.length == 2),
+        assert(puzzlePieceSize.length == 2);
   @HiveField(0)
   final String keyName;
   @HiveField(1)
@@ -38,5 +42,10 @@ class TilesheetLog {
   @HiveField(9)
   int gridIndex;
   @HiveField(10)
-  int heightlightIndex;
+  int highlightIndex;
+  @HiveField(11)
+  List<int> puzzlePieceSize;
+
+  factory TilesheetLog.fromJson(Map<String, dynamic> jsonMap) => _$TilesheetLogFromJson(jsonMap);
+  Map<String, dynamic> toJson() => _$TilesheetLogToJson(this);
 }

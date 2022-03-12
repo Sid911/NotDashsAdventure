@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_number_picker/flutter_number_picker.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
 
 class LevelAndVisibility extends StatelessWidget {
-  const LevelAndVisibility({Key? key}) : super(key: key);
-
+  const LevelAndVisibility({Key? key, required this.designer}) : super(key: key);
+  final LevelDesigner designer;
   @override
   Widget build(BuildContext context) {
     final position = MediaQuery.of(context).size.topLeft(const Offset(0, 130));
@@ -23,6 +24,7 @@ class LevelAndVisibility extends StatelessWidget {
                     children: [
                       CustomNumberPicker(
                         onValue: (dynamic value) {
+                          designer.moveGridForLayer(state.currentLayer < value ? true : false);
                           BlocProvider.of<LevelGenUiCubit>(context).setLayerIndex(value);
                         },
                         valueTextStyle: TextStyle(color: state.darkMode ? Colors.white : Colors.black, fontSize: 15),
