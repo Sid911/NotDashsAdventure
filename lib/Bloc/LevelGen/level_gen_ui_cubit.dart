@@ -15,9 +15,10 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
           darkMode: false,
           backgroundBegin: Colors.black,
           backgroundEnd: Colors.grey.shade900,
+          puzzleLayer: 1,
         ));
   TilesheetRepository repository = TilesheetRepository();
-  final Logger _logger = Logger("LeveL Genration UI");
+  final Logger _logger = Logger("LeveL Generation UI");
 
   void toggleTile(int index) {
     emit(LevelGenUILoaded(
@@ -28,6 +29,8 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
       darkMode: state.darkMode, backgroundEndColor: state.backgroundEndColor,
       backgroundBeginColor: state.backgroundBeginColor,
       showSettings: false,
+      resourceType: (state as LevelGenUILoaded).resourceType,
+      puzzleLayer: state.puzzleLayer,
     ));
   }
 
@@ -38,6 +41,7 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
       darkMode: state.darkMode,
       backgroundBegin: state.backgroundBeginColor,
       backgroundEnd: state.backgroundEndColor,
+      puzzleLayer: state.puzzleLayer,
     ));
     final tilesheet = await repository.getTileSheet();
     final totalTiles = repository.currentTilesheetLog!.recommendedTilesList.length;
@@ -45,14 +49,17 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
     blocksToggleList.first = true;
     // UI loaded
     emit(LevelGenUILoaded(
-        tilesheet: tilesheet!,
-        totalTiles: totalTiles,
-        lastTileIndex: 0,
-        currentLayer: state.currentLayer,
-        darkMode: state.darkMode,
-        backgroundBeginColor: state.darkMode ? Colors.white : Colors.black,
-        backgroundEndColor: state.darkMode ? Colors.grey : Colors.grey.shade900,
-        showSettings: state.showSettings));
+      tilesheet: tilesheet!,
+      totalTiles: totalTiles,
+      lastTileIndex: 0,
+      currentLayer: state.currentLayer,
+      darkMode: state.darkMode,
+      backgroundBeginColor: state.darkMode ? Colors.white : Colors.black,
+      backgroundEndColor: state.darkMode ? Colors.grey : Colors.grey.shade900,
+      showSettings: state.showSettings,
+      resourceType: ResourceType.tile,
+      puzzleLayer: state.puzzleLayer,
+    ));
   }
 
   void setLayerIndex(int index) {
@@ -67,9 +74,15 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
           darkMode: currentState.darkMode,
           backgroundEndColor: currentState.backgroundEndColor,
           backgroundBeginColor: currentState.backgroundBeginColor,
+          resourceType: currentState.resourceType,
           showSettings: false,
+          puzzleLayer: currentState.puzzleLayer,
         ),
       );
+      if (index == currentState.puzzleLayer) {
+        setResourceType(ResourceType.puzzle, 0);
+      }
+      ;
     } else {
       _logger.log(Level.INFO, "Current State is not loaded pls wait till it loads");
     }
@@ -87,6 +100,8 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         backgroundEndColor: value ? Colors.grey : Colors.grey.shade900,
         darkMode: value,
         showSettings: currentState.showSettings,
+        resourceType: currentState.resourceType,
+        puzzleLayer: currentState.puzzleLayer,
       ));
     }
   }
@@ -103,6 +118,8 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         backgroundEndColor: currentState.backgroundEndColor,
         darkMode: currentState.darkMode,
         showSettings: currentState.showSettings,
+        resourceType: currentState.resourceType,
+        puzzleLayer: currentState.puzzleLayer,
       ));
     }
   }
@@ -119,6 +136,8 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         backgroundEndColor: color,
         darkMode: currentState.darkMode,
         showSettings: currentState.showSettings,
+        resourceType: currentState.resourceType,
+        puzzleLayer: currentState.puzzleLayer,
       ));
     }
   }
@@ -135,7 +154,9 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
           darkMode: currentState.darkMode,
           backgroundEndColor: currentState.backgroundEndColor,
           backgroundBeginColor: currentState.backgroundBeginColor,
+          resourceType: currentState.resourceType,
           showSettings: false,
+          puzzleLayer: currentState.puzzleLayer,
         ),
       );
     }
@@ -154,12 +175,32 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
           backgroundEndColor: currentState.backgroundEndColor,
           backgroundBeginColor: currentState.backgroundBeginColor,
           showSettings: true,
+          resourceType: currentState.resourceType,
+          puzzleLayer: currentState.puzzleLayer,
         ),
       );
     }
   }
 
-  void setResourceType(ResourceType type) {
+  void setResourceType(ResourceType type, int initialIndex) {
+    if (state is LevelGenUILoaded) {
+      final currentState = state as LevelGenUILoaded;
+      emit(LevelGenUILoaded(
+        tilesheet: currentState.tileset!,
+        totalTiles: currentState.totalTiles!,
+        lastTileIndex: initialIndex,
+        currentLayer: currentState.currentLayer,
+        darkMode: currentState.darkMode,
+        backgroundEndColor: currentState.backgroundEndColor,
+        backgroundBeginColor: currentState.backgroundBeginColor,
+        showSettings: currentState.showSettings,
+        resourceType: type,
+        puzzleLayer: currentState.puzzleLayer,
+      ));
+    }
+  }
+
+  void setPuzzleLayer(int layer) {
     if (state is LevelGenUILoaded) {
       final currentState = state as LevelGenUILoaded;
       emit(LevelGenUILoaded(
@@ -170,8 +211,9 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         darkMode: currentState.darkMode,
         backgroundEndColor: currentState.backgroundEndColor,
         backgroundBeginColor: currentState.backgroundBeginColor,
-        showSettings: true,
-        resourceType: type,
+        showSettings: currentState.showSettings,
+        resourceType: currentState.resourceType,
+        puzzleLayer: layer,
       ));
     }
   }
@@ -179,10 +221,12 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
   void hideUI() {
     emit(
       LevelGenUIHide(
-          currentLayer: state.currentLayer,
-          darkMode: state.darkMode,
-          backgroundBegin: state.backgroundBeginColor,
-          backgroundEnd: state.backgroundEndColor),
+        currentLayer: state.currentLayer,
+        darkMode: state.darkMode,
+        backgroundBegin: state.backgroundBeginColor,
+        backgroundEnd: state.backgroundEndColor,
+        puzzleLayer: state.puzzleLayer,
+      ),
     );
   }
 }

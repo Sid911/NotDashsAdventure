@@ -10,6 +10,7 @@ abstract class LevelGenUiState extends Equatable {
     required this.backgroundBeginColor,
     required this.backgroundEndColor,
     this.currentLayer = 0,
+    this.puzzleLayer = 1,
   });
   final bool showUI;
   final bool showSettings;
@@ -17,6 +18,7 @@ abstract class LevelGenUiState extends Equatable {
   final int currentLayer;
   final Color backgroundBeginColor;
   final Color backgroundEndColor;
+  final int puzzleLayer;
   final SpriteSheet? tileset;
   final int? totalTiles;
 }
@@ -31,6 +33,7 @@ class LevelGenUILoaded extends LevelGenUiState {
     required Color backgroundBeginColor,
     required Color backgroundEndColor,
     required bool showSettings,
+    required int puzzleLayer,
     this.resourceType = ResourceType.tile,
   }) : super(
           showUI: true,
@@ -41,6 +44,7 @@ class LevelGenUILoaded extends LevelGenUiState {
           darkMode: darkMode,
           backgroundBeginColor: backgroundBeginColor,
           backgroundEndColor: backgroundEndColor,
+          puzzleLayer: puzzleLayer,
         );
   final int lastTileIndex;
   final ResourceType resourceType;
@@ -56,26 +60,30 @@ class LevelGenUILoaded extends LevelGenUiState {
         backgroundEndColor,
         showSettings,
         resourceType,
+        puzzleLayer,
       ];
 }
 
 class LevelGenUILoading extends LevelGenUiState {
-  const LevelGenUILoading({
-    required int currentLayer,
-    required bool darkMode,
-    required Color backgroundBegin,
-    required Color backgroundEnd,
-  }) : super(
+  const LevelGenUILoading(
+      {required int currentLayer,
+      required bool darkMode,
+      required Color backgroundBegin,
+      required Color backgroundEnd,
+      required int puzzleLayer})
+      : super(
           showUI: false,
           showSettings: false,
           currentLayer: currentLayer,
           darkMode: darkMode,
           backgroundBeginColor: backgroundBegin,
           backgroundEndColor: backgroundEnd,
+          puzzleLayer: puzzleLayer,
         );
   final bool loading = true;
   @override
-  List<Object?> get props => [showUI, tileset, totalTiles, loading, darkMode, backgroundBeginColor, backgroundEndColor];
+  List<Object?> get props =>
+      [showUI, tileset, totalTiles, loading, darkMode, backgroundBeginColor, backgroundEndColor, puzzleLayer];
 }
 
 class LevelGenUIHide extends LevelGenUiState {
@@ -84,6 +92,7 @@ class LevelGenUIHide extends LevelGenUiState {
     required bool darkMode,
     required Color backgroundBegin,
     required Color backgroundEnd,
+    required int puzzleLayer,
   }) : super(
           showUI: false,
           showSettings: false,
@@ -91,7 +100,9 @@ class LevelGenUIHide extends LevelGenUiState {
           darkMode: darkMode,
           backgroundBeginColor: backgroundBegin,
           backgroundEndColor: backgroundEnd,
+          puzzleLayer: puzzleLayer,
         );
   @override
-  List<Object?> get props => [showUI, tileset, totalTiles, darkMode, backgroundBeginColor, backgroundEndColor];
+  List<Object?> get props =>
+      [showUI, tileset, totalTiles, darkMode, backgroundBeginColor, backgroundEndColor, puzzleLayer];
 }

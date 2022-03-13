@@ -9,6 +9,10 @@ enum PuzzleCell {
   rTopLeft,
   rBottomRight,
   rBottomLeft,
+  rLeft,
+  rRight,
+  rTop,
+  rBottom,
   reflect,
   open,
   oneWayUp,
@@ -119,6 +123,18 @@ class Puzzle {
         break;
       case MotionDirection.right:
         offset = Point(1, 0);
+        break;
+      case MotionDirection.topLeft:
+        offset = Point(-1, -1);
+        break;
+      case MotionDirection.topRight:
+        offset = Point(1, -1);
+        break;
+      case MotionDirection.bottomLeft:
+        offset = Point(-1, 1);
+        break;
+      case MotionDirection.bottomRight:
+        offset = Point(1, 1);
         break;
       default:
         return Point(start.x, start.y, cell: PuzzleCell.blocked);

@@ -81,6 +81,7 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       tileHeight: srcTileSize,
       position: topLeft,
       anchor: Anchor.topLeft,
+      priority: 100,
     );
     _grid = IsometricTileMapCustom(
       tileset,
@@ -112,9 +113,10 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
         scalingFactor: 1.1538461538461538461538461538462,
         position: newPosition,
         anchor: Anchor.topLeft,
+        puzzleSize: Vector2(_tilesheetRepository.currentTilesheetLog!.puzzlePieceSize[0].toDouble(),
+            _tilesheetRepository.currentTilesheetLog!.puzzlePieceSize[1].toDouble()),
       ));
     }
-    print("environment length : ${envLayers.length}");
   }
 
   void assignBackground({
@@ -135,9 +137,13 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   }
 
   void moveGridForLayer(bool up) {
-    print("moving Grid : $up}");
-    up ? _grid.add(upForLayer) : _grid.add(downForLayer);
-    up ? _highlight.add(upForLayer) : _highlight.add(downForLayer);
+    print("moving Grid : $up");
+    up
+        ? _grid.position.sub(Vector2(srcTileSize / 2, tileHeight * 3 / 4))
+        : _grid.position.add(Vector2(srcTileSize / 2, tileHeight * 3 / 4));
+    up
+        ? _highlight.position.sub(Vector2(srcTileSize / 2, tileHeight * 3 / 4))
+        : _highlight.position.add(Vector2(srcTileSize / 2, tileHeight * 3 / 4));
   }
 
   @override
@@ -201,11 +207,13 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   }
 
   late double startZoom;
+  late LevelGenUiCubit currentUIState;
   @override
   void onScaleStart(ScaleStartInfo info) {
     // get the position and zoom the scale started from
     startPosition = info.eventPosition.game;
     startZoom = camera.zoom;
+    currentUIState = read<LevelGenUiCubit>();
     // if difference between the top down and scale start is more than 600ms ... that means user is trying to select
     final currentTime = DateTime.now();
     if (_clickStart != null && currentTime.difference(_clickStart!).inMilliseconds > 600) {
@@ -252,10 +260,10 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       if (_clickHeld) {
         // user is holding and dragging
         final screenPosition = info.eventPosition.game;
-        final block = _highlight.getBlock(screenPosition);
+        final block = envLayers[currentUIState.state.currentLayer].getBlock(screenPosition);
         if (block.x >= 0 && block.x <= _gameState.size && block.y >= 0 && block.y <= _gameState.size) {
           // is inside grid bounds
-          final Block startBlock = _highlight.getBlock(startPosition);
+          final Block startBlock = envLayers[currentUIState.state.currentLayer].getBlock(startPosition);
           _gameState.highlight(Vector2Int.fromBlock(block: startBlock), Vector2Int.fromBlock(block: block));
         } else {
           // shake the camera till user comes inside the bounds ...

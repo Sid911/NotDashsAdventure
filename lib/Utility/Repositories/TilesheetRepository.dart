@@ -51,13 +51,12 @@ class TilesheetRepository {
 
   Future<List<Sprite>> getPuzzleSprites() async {
     final String keyName = currentTilesheetLog == null ? defaultTilesheet : currentTilesheetLog!.keyName;
-
     final image = (await getTileSheet(tilesheetName: keyName))!.image;
     final size = currentTilesheetLog!.puzzlePieceSize;
     final List<Sprite> sprites = List.empty(growable: true);
     try {
       for (int i = 0; i < 8; i++) {
-        final position = Vector2((image.width + i * size[0]).toDouble(), (image.height - size[1]).toDouble());
+        final position = Vector2((i * size[0]).toDouble(), (image.height - size[1]).toDouble());
         sprites.add(Sprite(image, srcSize: Vector2(size[0].toDouble(), size[1].toDouble()), srcPosition: position));
       }
       return sprites;
@@ -65,6 +64,5 @@ class TilesheetRepository {
       logger.log(Level.SEVERE, "Error TilesheetRepository : ", e);
       return [];
     }
-    return [];
   }
 }

@@ -1,1 +1,1 @@
-enum MotionDirection { up, down, left, right, none }
+enum MotionDirection { up, down, left, right, topLeft, topRight, bottomLeft, bottomRight, none }

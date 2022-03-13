@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BlocksList.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_PuzzleList.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_TileCategories.dart';
+import 'package:not_dashs_adventure/Utility/Repositories/TilesheetRepository.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../Bloc/LevelGen/level_gen_ui_cubit.dart';
@@ -16,6 +18,7 @@ class BottomSelector extends StatefulWidget {
 }
 
 class _BottomSelectorState extends State<BottomSelector> {
+  TilesheetRepository repository = TilesheetRepository();
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -52,8 +55,7 @@ class _BottomSelectorState extends State<BottomSelector> {
                         ),
                       );
                     case ResourceType.puzzle:
-                      // TODO: Handle this case.
-                      return Container();
+                      return PuzzlesList(repository: repository);
                   }
                 }
                 return Container();

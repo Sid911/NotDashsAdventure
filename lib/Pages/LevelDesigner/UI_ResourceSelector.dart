@@ -28,7 +28,7 @@ class ResourceSelector extends StatelessWidget {
                       children: [
                         IconButton(
                             onPressed: () {
-                              BlocProvider.of<LevelGenUiCubit>(context).setResourceType(ResourceType.tile);
+                              BlocProvider.of<LevelGenUiCubit>(context).setResourceType(ResourceType.tile, 0);
                             },
                             splashRadius: 20,
                             tooltip: "Tile Pieces",
@@ -39,7 +39,7 @@ class ResourceSelector extends StatelessWidget {
                             )),
                         IconButton(
                             onPressed: () {
-                              BlocProvider.of<LevelGenUiCubit>(context).setResourceType(ResourceType.puzzle);
+                              BlocProvider.of<LevelGenUiCubit>(context).setResourceType(ResourceType.puzzle, 0);
                             },
                             splashRadius: 20,
                             tooltip: "Puzzle Pieces",

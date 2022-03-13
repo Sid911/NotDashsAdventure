@@ -24,12 +24,15 @@ class IsometricTileMapCustom extends PositionComponent {
 
   double scalingFactor;
 
+  Vector2? puzzleSize;
+
   IsometricTileMapCustom(
     this.tileset,
     this.matrix, {
     this.destTileSize,
     this.tileHeight,
     this.scalingFactor = 1,
+    this.puzzleSize,
     Vector2? position,
     Vector2? size,
     Vector2? scale,
@@ -51,6 +54,7 @@ class IsometricTileMapCustom extends PositionComponent {
   /// This is the vertical height of each block; by default it's half the tile size.
   double get effectiveTileHeight => tileHeight ?? (effectiveTileSize.y / 2);
 
+  Vector2 get pSize => puzzleSize ?? tileset.srcSize;
   @override
   void render(Canvas c) {
     final size = effectiveTileSize;
@@ -58,9 +62,12 @@ class IsometricTileMapCustom extends PositionComponent {
       for (var j = 0; j < matrix[i].length; j++) {
         final element = matrix[i][j];
         if (element != -1) {
-          final sprite = tileset.getSpriteById(element);
-          final p = getBlockRenderPositionInts(j, i);
-          sprite.render(c, position: p, size: size);
+          final sprite = element < -1
+              ? Sprite(tileset.image,
+                  srcPosition: Vector2(pSize.x * (element + 2).abs(), tileset.image.height - pSize.y), srcSize: pSize)
+              : tileset.getSpriteById(element);
+          final p = element < -1 ? getBottomLeftPositionInts(j, i) : getBlockRenderPositionInts(j, i);
+          sprite.render(c, position: p, size: element < -1 ? pSize : size);
         }
       }
     }
@@ -80,6 +87,12 @@ class IsometricTileMapCustom extends PositionComponent {
     final halfTile = Vector2(effectiveTileSize.x / 2, (effectiveTileSize.y / 2) / scalingFactor);
     final pos = Vector2(i.toDouble(), j.toDouble())..multiply(halfTile);
     return cartToIso(pos) - halfTile;
+  }
+
+  Vector2 getBottomLeftPositionInts(int i, int j) {
+    Vector2 initialPosition = getBlockRenderPositionInts(i, j);
+    initialPosition.sub(Vector2(pSize.x - effectiveTileSize.x, pSize.y - effectiveTileSize.y));
+    return initialPosition;
   }
 
   /// Get the position of the center of the surface of the isometric tile in
@@ -110,13 +123,11 @@ class IsometricTileMapCustom extends PositionComponent {
   /// This can be used to handle clicks or hovers.
   /// This is the opposite of [getBlockCenterPosition].
   Block getBlock(Vector2 p) {
-    print("Get block for : ${p.y} height , ${p.x}");
     final halfTile = Vector2(effectiveTileSize.x / 2, effectiveTileSize.y / 2);
     final multiplier = 1 - halfTile.y / (2 * effectiveTileHeight);
 
     final delta = halfTile.clone()..multiply(Vector2(1, multiplier));
     final cart = isoToCart(p - position + delta);
-    print("cartitian coordinate for : ${cart.y} height , ${cart.x}");
     final px = (cart.x / halfTile.x - 1).ceil();
     final py = (cart.y / (halfTile.y)).ceil();
     return Block(px, py);

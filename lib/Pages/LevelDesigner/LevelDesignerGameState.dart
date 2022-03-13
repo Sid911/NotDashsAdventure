@@ -7,7 +7,7 @@ class DesignerGameState {
   DesignerGameState({
     required this.gridSpriteIndex,
     required this.highlightSpriteIndex,
-    this.size = 20,
+    this.size = 10,
   })  : defaultMatrix = List.generate(size, (index) => List.generate(size, (_) => -1)),
         baseMatrix = List.generate(1, (_) => List.generate(size, (_) => List.generate(size, (_) => -1))),
         gridMatrix = List.generate(size, (index) => List.generate(size, (_) => gridSpriteIndex)) {
@@ -58,7 +58,7 @@ class DesignerGameState {
     checkForLayer(layerIndex);
     for (int i = lastHighlightRange!.lowerY; i <= lastHighlightRange!.higherY; i++) {
       baseMatrix[layerIndex][i].setAll(
-        lastHighlightRange!.lowerX - 1,
+        lastHighlightRange!.lowerX,
         List<int>.filled(lastHighlightRange!.higherX - lastHighlightRange!.lowerX + 1, replaceIndex),
       );
     }
@@ -78,7 +78,7 @@ class DesignerGameState {
     for (int i = minY; i <= maxY; i++) {
       highLightMatrix[i] = List<int>.generate(size, (index) => -1);
       if (i >= h.lowerY && i <= h.higherY) {
-        highLightMatrix[i].setAll(h.lowerX - 1, List<int>.filled(h.higherX - h.lowerX + 1, highlightSpriteIndex));
+        highLightMatrix[i].setAll(h.lowerX, List<int>.filled(h.higherX - h.lowerX + 1, highlightSpriteIndex));
       }
     }
     lastHighlightRange = h;
