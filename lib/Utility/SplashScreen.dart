@@ -2,6 +2,7 @@ import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:not_dashs_adventure/Levels/JsonLevelModel.dart';
 import 'package:not_dashs_adventure/Pages/MainMenu.dart';
 import 'package:not_dashs_adventure/Utility/Repositories/TilesheetLog.dart';
 import 'package:not_dashs_adventure/Utility/initialization.dart';
@@ -25,9 +26,10 @@ class _SplashScreenGameState extends State<SplashScreenGame> {
       autoStart: true,
     );
     Hive.registerAdapter(TilesheetLogAdapter());
+    Hive.registerAdapter(LevelModelAdapter());
+    Hive.openBox<LevelModel>("userLevels");
     Hive.openBox<TilesheetLog>("tilesheet").then((value) {
       if (value.isEmpty || kDebugMode) {
-        print('initialize');
         initForFirstTime(value);
       }
     });

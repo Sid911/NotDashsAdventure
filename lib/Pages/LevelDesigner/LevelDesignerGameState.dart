@@ -1,12 +1,18 @@
 import 'dart:math';
+import 'dart:convert';
 
+import 'package:flame/components.dart';
+import 'package:hive/hive.dart';
 import 'package:logging/logging.dart';
+import 'package:not_dashs_adventure/Levels/JsonLevelModel.dart';
 import 'package:not_dashs_adventure/Utility/VectorInt.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DesignerGameState {
   DesignerGameState({
     required this.gridSpriteIndex,
     required this.highlightSpriteIndex,
+    this.levelName = "Untitled",
     this.size = 10,
   })  : defaultMatrix = List.generate(size, (index) => List.generate(size, (_) => -1)),
         baseMatrix = List.generate(1, (_) => List.generate(size, (_) => List.generate(size, (_) => -1))),
@@ -17,6 +23,7 @@ class DesignerGameState {
 
   /// logger for the State
   final _logger = Logger("DesignerGameState");
+  String levelName;
 
   /// m and n for the square matrices [baseMatrix] and [highlightMatrix] and [gridMatrix]
   int size;
@@ -114,9 +121,51 @@ class DesignerGameState {
     return false;
   }
 
-  void save() {
-    UnimplementedError("Implement Save method");
+  // Save Specific Code
+  void save({
+    required String tilesetUID,
+    required double cameraZoom,
+    required Vector2 cameraPosition,
+    required bool tilesetIncluded,
+    required int puzzleLayer,
+    bool export = false,
+  }) {
+    List<List<List<int>>> matrixToBeSaved = List.empty(growable: true);
+    // remove empty layers
+    for (int i = 0; i < baseMatrix.length; i++) {
+      if (_layerContainsStuff(baseMatrix[i])) {
+        matrixToBeSaved.add(List.from(baseMatrix[i]));
+      }
+    }
+    final LevelModel levelModel = LevelModel(
+      LevelName: levelName,
+      StoryLevel: false,
+      Layers: matrixToBeSaved,
+      TilesetUID: tilesetUID,
+      Zoom: cameraZoom,
+      CameraPosition: [cameraPosition.x, cameraPosition.y],
+      PuzzleLayer: puzzleLayer,
+      TilesetIncluded: tilesetIncluded,
+    );
+    final Box<LevelModel> box = Hive.box("userLevels");
+    box.put(levelName, levelModel);
+
+    if (export) {
+      final jsonMap = levelModel.toJson();
+      final String jsonString = jsonEncode(jsonMap);
+      print(jsonString);
+    }
   }
+}
+
+// if layer is empty or not
+bool _layerContainsStuff(List<List<int>> layer) {
+  for (int i = 0; i < layer.length; i++) {
+    for (int j = 0; j < layer[i].length; j++) {
+      if (layer[i][j] != -1) return true;
+    }
+  }
+  return false;
 }
 
 class HighlightRange {

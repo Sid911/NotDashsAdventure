@@ -63,8 +63,15 @@ class IsometricTileMapCustom extends PositionComponent {
         final element = matrix[i][j];
         if (element != -1) {
           final sprite = element < -1
-              ? Sprite(tileset.image,
-                  srcPosition: Vector2(pSize.x * (element + 2).abs(), tileset.image.height - pSize.y), srcSize: pSize)
+              ? Sprite(
+                  tileset.image,
+                  srcPosition: Vector2(
+                    pSize.x * ((element + 2).abs() % (tileset.image.width / pSize.x).floor()),
+                    tileset.image.height -
+                        pSize.y * (((element + 2).abs() / (tileset.image.width / pSize.x).floor()).floor() + 1),
+                  ),
+                  srcSize: pSize,
+                )
               : tileset.getSpriteById(element);
           final p = element < -1 ? getBottomLeftPositionInts(j, i) : getBlockRenderPositionInts(j, i);
           sprite.render(c, position: p, size: element < -1 ? pSize : size);

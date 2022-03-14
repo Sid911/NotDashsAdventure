@@ -55,8 +55,11 @@ class TilesheetRepository {
     final size = currentTilesheetLog!.puzzlePieceSize;
     final List<Sprite> sprites = List.empty(growable: true);
     try {
-      for (int i = 0; i < 8; i++) {
-        final position = Vector2((i * size[0]).toDouble(), (image.height - size[1]).toDouble());
+      for (int i = 0; i < 14; i++) {
+        final position = Vector2(
+          ((i % (image.width / size[0]).floor()) * size[0]).toDouble(),
+          (image.height - size[1] * ((i / (image.width / size[0]).floor()).floor() + 1)).toDouble(),
+        );
         sprites.add(Sprite(image, srcSize: Vector2(size[0].toDouble(), size[1].toDouble()), srcPosition: position));
       }
       return sprites;

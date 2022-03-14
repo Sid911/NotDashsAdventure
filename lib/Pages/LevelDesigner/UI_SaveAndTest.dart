@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 import 'package:not_dashs_adventure/Pages/Components/CustomButton.dart';
+import 'package:not_dashs_adventure/Pages/Components/ExportDialog.dart';
+import 'package:not_dashs_adventure/Pages/Components/SaveDialog.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
 
 class SaveAndTest extends StatelessWidget {
-  const SaveAndTest({Key? key}) : super(key: key);
-
+  const SaveAndTest({Key? key, required this.levelDesigner}) : super(key: key);
+  final LevelDesigner levelDesigner;
   @override
   Widget build(BuildContext context) {
     final offsetMargin = MediaQuery.of(context).size.topRight(const Offset(-140, 10));
@@ -28,7 +31,14 @@ class SaveAndTest extends StatelessWidget {
               children: [
                 IconButton(
                   padding: const EdgeInsets.all(5),
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SaveDialog(darkMode: state.darkMode, levelDesigner: levelDesigner);
+                      },
+                    );
+                  },
                   icon: Icon(
                     Icons.save_outlined,
                     color: state.darkMode ? Colors.white : Colors.black,
@@ -38,21 +48,16 @@ class SaveAndTest extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: CustomAccentButton(
-                    tapUpFunction: () {},
+                    tapUpFunction: () {
+                      showDialog(context: context, builder: (BuildContext context) => const ExportDialog());
+                    },
                     backgroundColor: state.darkMode ? Colors.black : Colors.white,
                     shadow: false,
                     padding: const EdgeInsets.all(6),
                     child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
-                            "Test",
-                            style: TextStyle(color: state.darkMode ? Colors.white : Colors.black),
-                          ),
-                        ),
                         Icon(
-                          Icons.play_arrow_outlined,
+                          Icons.file_download_outlined,
                           color: state.darkMode ? Colors.white : Colors.black,
                           size: 20,
                         ),

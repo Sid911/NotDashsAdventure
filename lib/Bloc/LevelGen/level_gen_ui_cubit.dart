@@ -83,6 +83,13 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         setResourceType(ResourceType.puzzle, 0);
       }
       ;
+    } else if (state is LevelGenUIHide) {
+      emit(LevelGenUIHide(
+          currentLayer: state.currentLayer,
+          darkMode: state.darkMode,
+          backgroundBegin: state.backgroundBeginColor,
+          backgroundEnd: state.backgroundEndColor,
+          puzzleLayer: state.puzzleLayer));
     } else {
       _logger.log(Level.INFO, "Current State is not loaded pls wait till it loads");
     }
@@ -213,6 +220,14 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         backgroundBeginColor: currentState.backgroundBeginColor,
         showSettings: currentState.showSettings,
         resourceType: currentState.resourceType,
+        puzzleLayer: layer,
+      ));
+    } else if (state is LevelGenUIHide) {
+      emit(LevelGenUIHide(
+        currentLayer: state.currentLayer,
+        darkMode: state.darkMode,
+        backgroundBegin: state.backgroundBeginColor,
+        backgroundEnd: state.backgroundEndColor,
         puzzleLayer: layer,
       ));
     }

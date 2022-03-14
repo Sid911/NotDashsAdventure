@@ -24,32 +24,11 @@ class PuzzlesList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 // scrollDirection: Axis.horizontal,
                 // shrinkWrap: true,
-                children: [
-                  getPuzzleItem(() {
-                    cubit.toggleTile(-2);
-                  }, data[0]),
-                  getPuzzleItem(() {
-                    cubit.toggleTile(-3);
-                  }, data[1]),
-                  getPuzzleItem(() {
-                    cubit.toggleTile(-4);
-                  }, data[2]),
-                  getPuzzleItem(() {
-                    cubit.toggleTile(-5);
-                  }, data[3]),
-                  getPuzzleItem(() {
-                    cubit.toggleTile(-6);
-                  }, data[4]),
-                  getPuzzleItem(() {
-                    cubit.toggleTile(-7);
-                  }, data[5]),
-                  getPuzzleItem(() {
-                    cubit.toggleTile(-8);
-                  }, data[6]),
-                  getPuzzleItem(() {
-                    cubit.toggleTile(-9);
-                  }, data[7]),
-                ],
+                children: List.generate(
+                    14,
+                    (i) => getPuzzleItem(() {
+                          cubit.toggleTile(-i - 2);
+                        }, data[i])),
               );
             } else if (snapshot.hasError) {
               repository.logger.log(

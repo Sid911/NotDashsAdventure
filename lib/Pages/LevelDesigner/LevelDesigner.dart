@@ -6,6 +6,7 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
+import 'package:not_dashs_adventure/Levels/JsonLevelModel.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesignerGameState.dart';
 import 'package:not_dashs_adventure/Utility/Repositories/TilesheetRepository.dart';
 import 'package:not_dashs_adventure/Utility/VectorInt.dart';
@@ -13,6 +14,10 @@ import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 import '../Components/IsometricTileMapCustom.dart';
 
 class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, ScaleDetector, FPSCounter {
+  LevelDesigner({this.iModel});
+  // Level Mode
+  LevelModel? iModel;
+  // Paints
   static final fpsTextPaint = TextPaint(
     style: const TextStyle(color: Color(0xFFFF0000)),
   );
@@ -25,9 +30,6 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   static const halfSize = false;
   static double tileHeight = 257.0;
-  // effects
-  MoveEffect upForLayer = MoveEffect.by(Vector2(-60, -60), EffectController(duration: 0.25));
-  MoveEffect downForLayer = MoveEffect.by(Vector2(60, 60), EffectController(duration: 0.25));
 
   late DesignerGameState _gameState;
   final TilesheetRepository _tilesheetRepository = TilesheetRepository();
@@ -48,30 +50,33 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
 
   @override
   Future<void> onLoad() async {
+    if (iModel != null) {
+      camera.zoom = iModel!.Zoom;
+      camera.moveTo(Vector2(iModel!.CameraPosition[0], iModel!.CameraPosition[0]));
+    }
     camera.setRelativeOffset(Anchor.center);
     camera.speed = 100;
     await super.onLoad();
     // Load the basic Tileset and set the state
-    {
-      final loadedTileset = await _tilesheetRepository.getTileSheet();
-      assert(loadedTileset != null);
-      _gameState = DesignerGameState(
-          gridSpriteIndex: _tilesheetRepository.currentTilesheetLog!.gridIndex,
-          highlightSpriteIndex: _tilesheetRepository.currentTilesheetLog!.highlightIndex);
-      tileset = loadedTileset!;
-      // get the src dimension
-      srcTileSize = _tilesheetRepository.currentTilesheetLog!.srcSize[0].toDouble();
-      tileHeight = _tilesheetRepository.currentTilesheetLog!.srcSize[1].toDouble();
 
-      upForLayer = MoveEffect.by(
-        Vector2(-srcTileSize / 2, -tileHeight * 3 / 4),
-        EffectController(duration: 0.25),
-      );
-      downForLayer = MoveEffect.by(
-        Vector2(srcTileSize / 2, tileHeight * 3 / 4),
-        EffectController(duration: 0.25),
-      );
+    final loadedTileset = iModel != null
+        ? await _tilesheetRepository.getTileSheet(tilesheetName: iModel!.TilesetUID)
+        : await _tilesheetRepository.getTileSheet();
+
+    assert(loadedTileset != null);
+    _gameState = DesignerGameState(
+      gridSpriteIndex: _tilesheetRepository.currentTilesheetLog!.gridIndex,
+      highlightSpriteIndex: _tilesheetRepository.currentTilesheetLog!.highlightIndex,
+    );
+    if (iModel != null) {
+      _gameState.levelName = iModel!.LevelName;
+      _gameState.baseMatrix = iModel!.Layers;
     }
+    tileset = loadedTileset!;
+    // get the src dimension
+    srcTileSize = _tilesheetRepository.currentTilesheetLog!.srcSize[0].toDouble();
+    tileHeight = _tilesheetRepository.currentTilesheetLog!.srcSize[1].toDouble();
+
     // Add TileMaps
     computeEnvironment(0);
     _highlight = IsometricTileMapCustom(
@@ -97,8 +102,12 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   void onAttach() {
     super.onAttach();
     // get height and width and assign paint
-    final mUIState = read<LevelGenUiCubit>().state;
+    final mUICubit = read<LevelGenUiCubit>();
+    final mUIState = mUICubit.state;
     assignBackground(startingColor: mUIState.backgroundBeginColor, endingColor: mUIState.backgroundEndColor);
+    if (iModel != null) {
+      mUICubit.setLayerIndex(iModel!.PuzzleLayer);
+    }
   }
 
   void computeEnvironment(int initial) {
@@ -126,14 +135,23 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     Alignment endAlignment = Alignment.bottomCenter,
   }) {
     rect = Rect.fromLTWH(0, 0, size.x, size.y);
-    backgroundPaint.shader = LinearGradient(
-      colors: [
-        startingColor,
-        endingColor,
-      ],
-      begin: beginAlignment,
-      end: endAlignment,
-    ).createShader(rect);
+    backgroundPaint.shader = iModel == null
+        ? LinearGradient(
+            colors: [
+              startingColor,
+              endingColor,
+            ],
+            begin: beginAlignment,
+            end: endAlignment,
+          ).createShader(rect)
+        : LinearGradient(
+            colors: [
+              Color(int.parse("0xff${iModel!.hexGradientStart}", radix: 16)),
+              Color(int.parse("0xff${iModel!.hexGradientEnd}", radix: 16)),
+            ],
+            begin: beginAlignment,
+            end: endAlignment,
+          ).createShader(rect);
   }
 
   void moveGridForLayer(bool up) {
@@ -144,6 +162,17 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
     up
         ? _highlight.position.sub(Vector2(srcTileSize / 2, tileHeight * 3 / 4))
         : _highlight.position.add(Vector2(srcTileSize / 2, tileHeight * 3 / 4));
+  }
+
+  void saveLevel({required bool includeTileSet, required bool export}) {
+    currentUICubit = read<LevelGenUiCubit>();
+    _gameState.save(
+      tilesetUID: _tilesheetRepository.currentTilesheetKey,
+      cameraZoom: camera.zoom,
+      cameraPosition: camera.position,
+      tilesetIncluded: includeTileSet,
+      puzzleLayer: currentUICubit.state.puzzleLayer,
+    );
   }
 
   @override
@@ -207,13 +236,13 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
   }
 
   late double startZoom;
-  late LevelGenUiCubit currentUIState;
+  late LevelGenUiCubit currentUICubit;
   @override
   void onScaleStart(ScaleStartInfo info) {
     // get the position and zoom the scale started from
     startPosition = info.eventPosition.game;
     startZoom = camera.zoom;
-    currentUIState = read<LevelGenUiCubit>();
+    currentUICubit = read<LevelGenUiCubit>();
     // if difference between the top down and scale start is more than 600ms ... that means user is trying to select
     final currentTime = DateTime.now();
     if (_clickStart != null && currentTime.difference(_clickStart!).inMilliseconds > 600) {
@@ -260,10 +289,10 @@ class LevelDesigner extends FlameBlocGame with TapDetector, ScrollDetector, Scal
       if (_clickHeld) {
         // user is holding and dragging
         final screenPosition = info.eventPosition.game;
-        final block = envLayers[currentUIState.state.currentLayer].getBlock(screenPosition);
+        final block = envLayers[currentUICubit.state.currentLayer].getBlock(screenPosition);
         if (block.x >= 0 && block.x <= _gameState.size && block.y >= 0 && block.y <= _gameState.size) {
           // is inside grid bounds
-          final Block startBlock = envLayers[currentUIState.state.currentLayer].getBlock(startPosition);
+          final Block startBlock = envLayers[currentUICubit.state.currentLayer].getBlock(startPosition);
           _gameState.highlight(Vector2Int.fromBlock(block: startBlock), Vector2Int.fromBlock(block: block));
         } else {
           // shake the camera till user comes inside the bounds ...
