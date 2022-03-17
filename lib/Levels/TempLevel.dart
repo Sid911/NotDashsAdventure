@@ -6,7 +6,8 @@ import 'package:flame/input.dart';
 import 'package:flame/sprite.dart';
 import 'package:not_dashs_adventure/Utility/puzzle.dart';
 
-class TempLevel extends FlameGame with MouseMovementDetector, TapDetector, VerticalDragDetector, HorizontalDragDetector {
+class TempLevel extends FlameGame
+    with MouseMovementDetector, TapDetector, VerticalDragDetector, HorizontalDragDetector {
   late List<List<PuzzleCell>> initialMatrix;
   late Puzzle puzzle;
   @override
@@ -35,9 +36,9 @@ class TempLevel extends FlameGame with MouseMovementDetector, TapDetector, Verti
 
     initialMatrix = [
       [PuzzleCell.blocked, PuzzleCell.open, PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.blocked],
-      [PuzzleCell.blocked, PuzzleCell.rBottomLeft, PuzzleCell.open, PuzzleCell.open, PuzzleCell.rTopRight],
+      [PuzzleCell.blocked, PuzzleCell.rSW, PuzzleCell.open, PuzzleCell.open, PuzzleCell.rNE],
       [PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.open],
-      [PuzzleCell.blocked, PuzzleCell.rTopLeft, PuzzleCell.open, PuzzleCell.open, PuzzleCell.rBottomRight],
+      [PuzzleCell.blocked, PuzzleCell.rNW, PuzzleCell.open, PuzzleCell.open, PuzzleCell.rSE],
       [PuzzleCell.blocked, PuzzleCell.open, PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.blocked],
     ];
 

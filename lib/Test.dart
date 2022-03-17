@@ -80,9 +80,9 @@ class IsometricTileMapExample extends FlameGame with MouseMovementDetector, TapD
   void testPuzzle() {
     List<List<PuzzleCell>> initialMatrix = [
       [PuzzleCell.blocked, PuzzleCell.open, PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.blocked],
-      [PuzzleCell.blocked, PuzzleCell.rBottomLeft, PuzzleCell.open, PuzzleCell.blocked, PuzzleCell.rTopRight],
+      [PuzzleCell.blocked, PuzzleCell.rSW, PuzzleCell.open, PuzzleCell.blocked, PuzzleCell.rNE],
       [PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.open, PuzzleCell.blocked],
-      [PuzzleCell.open, PuzzleCell.open, PuzzleCell.open, PuzzleCell.rBottomRight, PuzzleCell.blocked],
+      [PuzzleCell.open, PuzzleCell.open, PuzzleCell.open, PuzzleCell.rSE, PuzzleCell.blocked],
       [PuzzleCell.blocked, PuzzleCell.open, PuzzleCell.blocked, PuzzleCell.blocked, PuzzleCell.blocked],
     ];
 
@@ -91,7 +91,7 @@ class IsometricTileMapExample extends FlameGame with MouseMovementDetector, TapD
         maxSolDistance: 9,
         start: Point(0, 3),
         end: Point(1, 0),
-        startDirection: MotionDirection.right);
+        startDirection: MotionDirection.E);
     puzzle.swapCells(Point(4, 1), Point(3, 1));
     final result = puzzle.getCurrentLightPath();
     for (Point x in result) {

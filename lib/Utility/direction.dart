@@ -1,1 +1,1 @@
-enum MotionDirection { up, down, left, right, topLeft, topRight, bottomLeft, bottomRight, none }
+enum MotionDirection { N, S, W, E, NW, NE, SW, SE, none }

@@ -128,6 +128,14 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         resourceType: currentState.resourceType,
         puzzleLayer: currentState.puzzleLayer,
       ));
+    } else if (state is LevelGenUIHide) {
+      emit(LevelGenUIHide(
+        currentLayer: state.currentLayer,
+        darkMode: state.darkMode,
+        backgroundBegin: color,
+        backgroundEnd: state.backgroundEndColor,
+        puzzleLayer: state.puzzleLayer,
+      ));
     }
   }
 
@@ -145,6 +153,14 @@ class LevelGenUiCubit extends Cubit<LevelGenUiState> {
         showSettings: currentState.showSettings,
         resourceType: currentState.resourceType,
         puzzleLayer: currentState.puzzleLayer,
+      ));
+    } else if (state is LevelGenUIHide) {
+      emit(LevelGenUIHide(
+        currentLayer: state.currentLayer,
+        darkMode: state.darkMode,
+        backgroundBegin: state.backgroundBeginColor,
+        backgroundEnd: color,
+        puzzleLayer: state.puzzleLayer,
       ));
     }
   }

@@ -24,8 +24,8 @@ class BlocksList extends StatelessWidget {
           },
           child: Container(
               padding: const EdgeInsets.all(2),
-              width: _repository.currentTilesheetLog!.srcSize[0] / 3,
-              height: _repository.currentTilesheetLog!.srcSize[0] / 3,
+              width: _repository.currentTilesheetLog!.srcSize[0] / 3.5,
+              height: _repository.currentTilesheetLog!.srcSize[0] / 3.5,
               child: SpriteWidget(
                 sprite: sprite,
               )),

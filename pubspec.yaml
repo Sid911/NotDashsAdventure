@@ -88,6 +88,7 @@ flutter:
     - assets/images/iso.png
     - assets/images/selector.png
     - assets/images/tilesheet.png
+    - assets/images/MainMenu.png
     - assets/images/tutorialTilesheet.png
     - assets/images/tilesheet_111x111.png
   # To add assets to your application, add an assets section, like this:

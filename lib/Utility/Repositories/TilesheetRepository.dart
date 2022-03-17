@@ -55,7 +55,7 @@ class TilesheetRepository {
     final size = currentTilesheetLog!.puzzlePieceSize;
     final List<Sprite> sprites = List.empty(growable: true);
     try {
-      for (int i = 0; i < 14; i++) {
+      for (int i = 0; i < 20; i++) {
         final position = Vector2(
           ((i % (image.width / size[0]).floor()) * size[0]).toDouble(),
           (image.height - size[1] * ((i / (image.width / size[0]).floor()).floor() + 1)).toDouble(),

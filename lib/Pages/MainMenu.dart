@@ -2,6 +2,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
+import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesignerWrapper.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BottomSelector.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_DesignerSettings.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_LevelAndVisibility.dart';
@@ -25,52 +26,11 @@ class _MainMenuState extends State<MainMenu> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => BlocProvider(
-              create: (context) => LevelGenUiCubit(),
-              child: GameWidget(
-                game: LevelDesigner(),
-                loadingBuilder: (BuildContext context) {
-                  return Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: Colors.black,
-                    child: const LinearProgressIndicator(),
-                  );
-                },
-                overlayBuilderMap: {
-                  'options': (context, _) {
-                    return const NavAndOptions();
-                  },
-                  "saveAndTest": (context, LevelDesigner designer) {
-                    return SaveAndTest(levelDesigner: designer);
-                  },
-                  "levelAndVisibility": (context, LevelDesigner designer) {
-                    return LevelAndVisibility(designer: designer);
-                  },
-                  "bottomSelector": (context, _) {
-                    return const BottomSelector();
-                  },
-                  'settings': (context, LevelDesigner designer) {
-                    return DesignerSettings(designer: designer);
-                  },
-                  'resourceSelector': (BuildContext context, LevelDesigner designer) {
-                    return const ResourceSelector();
-                  }
-                },
-                initialActiveOverlays: const [
-                  "options",
-                  "saveAndTest",
-                  "levelAndVisibility",
-                  'resourceSelector',
-                  "bottomSelector",
-                  "settings",
-                ],
-              ),
-            ),
+            builder: (BuildContext context) => getDesigner(null),
           ),
         );
       },
-      color: Colors.blueGrey,
+      color: Colors.black54,
       elevation: 10,
       child: const Text(
         "Level Designer",
@@ -82,9 +42,10 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
       body: Container(
         padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+            image: DecorationImage(image: AssetImage("assets/images/MainMenu.png"), fit: BoxFit.fill)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

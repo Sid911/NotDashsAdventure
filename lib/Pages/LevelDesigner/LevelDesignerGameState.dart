@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:hive/hive.dart';
@@ -49,7 +50,7 @@ class DesignerGameState {
       _logger.log(Level.INFO, "Index : $replacingIndex");
       baseMatrix[layerIndex][location.y][location.x] = replacingIndex;
       highLightMatrix[lastHighlightBlock.y][lastHighlightBlock.x] = -1;
-      highLightMatrix[location.y][location.x] = 117;
+      highLightMatrix[location.y][location.x] = highlightSpriteIndex;
       lastHighlightBlock = Vector2Int(x: location.x, y: location.y);
     } else {
       _logger.log(Level.SHOUT, '''LevelDesignerGameState:
@@ -128,6 +129,8 @@ class DesignerGameState {
     required Vector2 cameraPosition,
     required bool tilesetIncluded,
     required int puzzleLayer,
+    required Color gradientBegin,
+    required Color gradientEnd,
     bool export = false,
   }) {
     List<List<List<int>>> matrixToBeSaved = List.empty(growable: true);
@@ -146,6 +149,8 @@ class DesignerGameState {
       CameraPosition: [cameraPosition.x, cameraPosition.y],
       PuzzleLayer: puzzleLayer,
       TilesetIncluded: tilesetIncluded,
+      hexGradientStart: gradientBegin.value.toRadixString(16),
+      hexGradientEnd: gradientEnd.value.toRadixString(16),
     );
     final Box<LevelModel> box = Hive.box("userLevels");
     box.put(levelName, levelModel);

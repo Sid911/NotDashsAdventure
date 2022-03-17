@@ -20,15 +20,18 @@ class PuzzlesList extends StatelessWidget {
             final cubit = BlocProvider.of<LevelGenUiCubit>(context);
             if (snapshot.hasData) {
               final List<Sprite> data = snapshot.data!;
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // scrollDirection: Axis.horizontal,
-                // shrinkWrap: true,
-                children: List.generate(
-                    14,
-                    (i) => getPuzzleItem(() {
-                          cubit.toggleTile(-i - 2);
-                        }, data[i])),
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // scrollDirection: Axis.horizontal,
+                  // shrinkWrap: true,
+                  children: List.generate(
+                      20,
+                      (i) => getPuzzleItem(() {
+                            cubit.toggleTile(-i - 2);
+                          }, data[i])),
+                ),
               );
             } else if (snapshot.hasError) {
               repository.logger.log(

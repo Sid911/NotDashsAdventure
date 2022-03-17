@@ -6,8 +6,15 @@ import 'package:not_dashs_adventure/Pages/Components/CustomButton.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
 
 class DesignerSettings extends StatefulWidget {
-  const DesignerSettings({Key? key, required this.designer}) : super(key: key);
+  const DesignerSettings({
+    Key? key,
+    required this.designer,
+    required this.startColor,
+    required this.endColor,
+  }) : super(key: key);
   final LevelDesigner designer;
+  final Color startColor;
+  final Color endColor;
   @override
   State<DesignerSettings> createState() => _DesignerSettingsState();
 }
@@ -28,7 +35,14 @@ class _DesignerSettingsState extends State<DesignerSettings> {
     setState(() => pickerEndColor = color);
   }
 
-// raise the [showDialog] widget
+  @override
+  void initState() {
+    super.initState();
+    pickerStartColor = widget.startColor;
+    currentStartColor = widget.startColor;
+    pickerEndColor = widget.endColor;
+    currentEndColor = widget.endColor;
+  } // raise the [showDialog] widget
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +50,6 @@ class _DesignerSettingsState extends State<DesignerSettings> {
     final offset = MediaQuery.of(context).size.center(Offset(-1 * (size.width - 100) / 2, -1 * (size.height - 40) / 2));
     return BlocBuilder<LevelGenUiCubit, LevelGenUiState>(
       builder: (context, state) {
-        // pickerStartColor = currentStartColor = state.backgroundBeginColor;
-        // pickerEndColor = currentEndColor = state.backgroundEndColor;
         return state.showSettings
             ? Container(
                 width: size.width - 100,
@@ -45,7 +57,7 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                 margin: EdgeInsets.only(left: offset.dx, top: offset.dy),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: state.darkMode ? Colors.black87 : Colors.white70,
+                  color: state.darkMode ? Colors.grey.shade900 : Colors.grey.shade100,
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -149,7 +161,7 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                                       return AlertDialog(
                                         content: SingleChildScrollView(
                                           child: ColorPicker(
-                                            pickerColor: pickerEndColor,
+                                            pickerColor: pickerEndColor = state.backgroundBeginColor,
                                             onColorChanged: changeEndColor,
                                             enableAlpha: false,
                                           ),

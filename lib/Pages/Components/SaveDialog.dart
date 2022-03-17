@@ -45,7 +45,7 @@ class _SaveDialogState extends State<SaveDialog> {
                 CustomAccentButton(
                   tapUpFunction: () {
                     if (controller.text.isNotEmpty) {
-                      widget.levelDesigner.saveLevel(includeTileSet: false, export: false);
+                      widget.levelDesigner.saveLevel(includeTileSet: false, export: false, name: controller.text);
                       Navigator.pop(context);
                     }
                   },

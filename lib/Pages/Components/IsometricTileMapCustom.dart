@@ -1,6 +1,8 @@
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
+import 'package:flutter/painting.dart';
+import 'package:not_dashs_adventure/Utility/puzzle.dart';
 
 /// This component renders a tilemap, represented by an int matrix, given a
 /// tileset, in which the integers are the block ids.
@@ -25,6 +27,10 @@ class IsometricTileMapCustom extends PositionComponent {
   double scalingFactor;
 
   Vector2? puzzleSize;
+  // Render lines
+  bool renderLines = false;
+  List<Point> points = List.empty();
+  final linePaint = Paint()..color = const Color(0xFF000000);
 
   IsometricTileMapCustom(
     this.tileset,
@@ -78,6 +84,12 @@ class IsometricTileMapCustom extends PositionComponent {
         }
       }
     }
+    if (renderLines) {
+      for (int i = 0; i < points.length - 1; i++) {
+        c.drawLine(getBlockCenterPosition(points[i].toBlock()).toOffset(),
+            getBlockCenterPosition(points[i + 1].toBlock()).toOffset(), linePaint);
+      }
+    }
   }
 
   /// Get the position in which a block is rendered in, in the isometric space.
@@ -98,7 +110,8 @@ class IsometricTileMapCustom extends PositionComponent {
 
   Vector2 getBottomLeftPositionInts(int i, int j) {
     Vector2 initialPosition = getBlockRenderPositionInts(i, j);
-    initialPosition.sub(Vector2(pSize.x - effectiveTileSize.x, pSize.y - effectiveTileSize.y));
+    initialPosition
+        .sub(Vector2(pSize.x - effectiveTileSize.x, pSize.y - effectiveTileSize.y - effectiveTileHeight / 2));
     return initialPosition;
   }
 
@@ -108,7 +121,7 @@ class IsometricTileMapCustom extends PositionComponent {
   /// This is the opposite of [getBlock].
   Vector2 getBlockCenterPosition(Block block) {
     final tile = effectiveTileSize;
-    return getBlockRenderPosition(block) + Vector2(tile.x / 2, tile.y - effectiveTileHeight - tile.y / 4);
+    return getBlockRenderPosition(block) + Vector2(tile.x / 2, tile.y - effectiveTileHeight / 2);
   }
 
   /// Converts a coordinate from the isometric space to the cartesian space.

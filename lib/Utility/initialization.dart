@@ -65,7 +65,12 @@ void initForFirstTime(Box<TilesheetLog> box) {
       gridIndex: 22,
       highlightIndex: 24,
       recommendedTilesList: List.generate(15, (index) => index),
-      tileCategoryMap: {});
+      tileCategoryMap: {
+        "No outline / Shaded": List.generate(7, (index) => index),
+        "outline / Not Shaded": List.generate(7, (index) => index + 8),
+        "outline / Shaded": List.generate(6, (index) => index + 15)..add(7),
+        "Grid / Shadow": List.generate(11, (index) => index + 21),
+      });
   box.put("default", defaultTilesheet);
   box.put("tutorial", tutorialTilesheet);
 }

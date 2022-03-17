@@ -16,8 +16,8 @@ class LevelModel {
     required this.CameraPosition,
     required this.PuzzleLayer,
     required this.TilesetIncluded,
-    this.hexGradientStart = "FFFFFF",
-    this.hexGradientEnd = "9E9E9E",
+    this.hexGradientStart = "ffffff",
+    this.hexGradientEnd = "9e9e9e",
   });
   @HiveField(0)
   String LevelName;
