@@ -24,9 +24,11 @@ class IsometricTileMapCustom extends PositionComponent {
   /// Note: this must be measured in the destination space.
   double? tileHeight;
 
-  double scalingFactor;
-
-  Vector2? puzzleSize;
+  /// propTile's Max Size. This size is used to define negative indexed elements.
+  /// Note : Currently this only accounts for variable height, width is disregarded
+  /// and [tileset.srcSize.x] is used instead.
+  ///
+  Vector2? propSize;
   // Render lines
   bool renderLines = false;
   List<Point> points = List.empty();
@@ -37,8 +39,7 @@ class IsometricTileMapCustom extends PositionComponent {
     this.matrix, {
     this.destTileSize,
     this.tileHeight,
-    this.scalingFactor = 1,
-    this.puzzleSize,
+    this.propSize,
     Vector2? position,
     Vector2? size,
     Vector2? scale,
@@ -57,10 +58,15 @@ class IsometricTileMapCustom extends PositionComponent {
   /// This is the size the tiles will be drawn (either original or overwritten).
   Vector2 get effectiveTileSize => destTileSize ?? tileset.srcSize;
 
+  /// Gets the current Scaling factor for the isometric View
+  double get scalingFactor => tileset.srcSize.y / tileset.srcSize.x;
+
   /// This is the vertical height of each block; by default it's half the tile size.
   double get effectiveTileHeight => tileHeight ?? (effectiveTileSize.y / 2);
 
-  Vector2 get pSize => puzzleSize ?? tileset.srcSize;
+  /// gets the effective propSize. PropSize should be assigned if prop dimension are different from srcSize of tilset
+  Vector2 get pSize => propSize ?? tileset.srcSize;
+
   @override
   void render(Canvas c) {
     final size = effectiveTileSize;
@@ -72,22 +78,32 @@ class IsometricTileMapCustom extends PositionComponent {
               ? Sprite(
                   tileset.image,
                   srcPosition: Vector2(
-                    pSize.x * ((element + 2).abs() % (tileset.image.width / pSize.x).floor()),
+                    pSize.x *
+                        ((element + 2).abs() %
+                            (tileset.image.width / pSize.x).floor()),
                     tileset.image.height -
-                        pSize.y * (((element + 2).abs() / (tileset.image.width / pSize.x).floor()).floor() + 1),
+                        pSize.y *
+                            (((element + 2).abs() /
+                                        (tileset.image.width / pSize.x).floor())
+                                    .floor() +
+                                1),
                   ),
                   srcSize: pSize,
                 )
               : tileset.getSpriteById(element);
-          final p = element < -1 ? getBottomLeftPositionInts(j, i) : getBlockRenderPositionInts(j, i);
+          final p = element < -1
+              ? getVariableRenderPositionInts(j, i)
+              : getBlockRenderPositionInts(j, i);
           sprite.render(c, position: p, size: element < -1 ? pSize : size);
         }
       }
     }
     if (renderLines) {
       for (int i = 0; i < points.length - 1; i++) {
-        c.drawLine(getBlockCenterPosition(points[i].toBlock()).toOffset(),
-            getBlockCenterPosition(points[i + 1].toBlock()).toOffset(), linePaint);
+        c.drawLine(
+            getBlockCenterPosition(points[i].toBlock()).toOffset(),
+            getBlockCenterPosition(points[i + 1].toBlock()).toOffset(),
+            linePaint);
       }
     }
   }
@@ -103,15 +119,19 @@ class IsometricTileMapCustom extends PositionComponent {
 
   /// Same as getBlockRenderPosition but the arguments are exploded as integers.
   Vector2 getBlockRenderPositionInts(int i, int j) {
-    final halfTile = Vector2(effectiveTileSize.x / 2, (effectiveTileSize.y / 2) / scalingFactor);
+    final halfTile = Vector2(
+        effectiveTileSize.x / 2, (effectiveTileSize.y / 2) / scalingFactor);
     final pos = Vector2(i.toDouble(), j.toDouble())..multiply(halfTile);
     return cartToIso(pos) - halfTile;
   }
 
-  Vector2 getBottomLeftPositionInts(int i, int j) {
+  /// Same as [getBlockRenderPositionInts] but is used for props ie. elements with <= -2 values
+  ///
+  /// This accounts for difference in size of the propSize.
+  Vector2 getVariableRenderPositionInts(int i, int j) {
     Vector2 initialPosition = getBlockRenderPositionInts(i, j);
-    initialPosition
-        .sub(Vector2(pSize.x - effectiveTileSize.x, pSize.y - effectiveTileSize.y - effectiveTileHeight / 2));
+    initialPosition.sub(Vector2(pSize.x - effectiveTileSize.x,
+        pSize.y - effectiveTileSize.y - effectiveTileHeight));
     return initialPosition;
   }
 
@@ -121,7 +141,8 @@ class IsometricTileMapCustom extends PositionComponent {
   /// This is the opposite of [getBlock].
   Vector2 getBlockCenterPosition(Block block) {
     final tile = effectiveTileSize;
-    return getBlockRenderPosition(block) + Vector2(tile.x / 2, tile.y - effectiveTileHeight / 2);
+    return getBlockRenderPosition(block) +
+        Vector2(tile.x / 2, tile.y - effectiveTileHeight - tile.y / 4);
   }
 
   /// Converts a coordinate from the isometric space to the cartesian space.
@@ -143,9 +164,8 @@ class IsometricTileMapCustom extends PositionComponent {
   /// This can be used to handle clicks or hovers.
   /// This is the opposite of [getBlockCenterPosition].
   Block getBlock(Vector2 p) {
-    final halfTile = Vector2(effectiveTileSize.x / 2, effectiveTileSize.y / 2);
+    final halfTile = effectiveTileSize / 2;
     final multiplier = 1 - halfTile.y / (2 * effectiveTileHeight);
-
     final delta = halfTile.clone()..multiply(Vector2(1, multiplier));
     final cart = isoToCart(p - position + delta);
     final px = (cart.x / halfTile.x - 1).ceil();
@@ -175,6 +195,9 @@ class IsometricTileMapCustom extends PositionComponent {
 
   /// Return whether the matrix contains a block in its bounds.
   bool containsBlock(Block block) {
-    return block.y >= 0 && block.y < matrix.length && block.x >= 0 && block.x < matrix[block.y].length;
+    return block.y >= 0 &&
+        block.y < matrix.length &&
+        block.x >= 0 &&
+        block.x < matrix[block.y].length;
   }
 }

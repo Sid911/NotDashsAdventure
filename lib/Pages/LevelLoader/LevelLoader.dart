@@ -71,9 +71,7 @@ class LevelLoader extends FlameBlocGame with TapDetector, ScrollDetector, ScaleD
     _highLightLayer = IsometricTileMapCustom(
       tileset,
       _gameState.highLightMatrix,
-      scalingFactor: tileHeight / srcTileSize,
-      tileHeight: srcTileSize,
-      position: topLeft,
+      position: Vector2(0, -iModel.PuzzleLayer * tileHeight / 2),
       anchor: Anchor.topLeft,
       priority: 100,
     );
@@ -103,12 +101,9 @@ class LevelLoader extends FlameBlocGame with TapDetector, ScrollDetector, ScaleD
         tileset,
         _gameState.baseMatrix[i],
         priority: i,
-        angle: 0,
-        tileHeight: tileHeight,
-        scalingFactor: tileHeight / srcTileSize,
         position: newPosition,
         anchor: Anchor.topLeft,
-        puzzleSize: Vector2(_tilesheetRepository.currentTilesheetLog!.puzzlePieceSize[0].toDouble(),
+        propSize: Vector2(_tilesheetRepository.currentTilesheetLog!.puzzlePieceSize[0].toDouble(),
             _tilesheetRepository.currentTilesheetLog!.puzzlePieceSize[1].toDouble()),
       ));
     }

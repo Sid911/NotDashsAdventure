@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:flame/components.dart';
 import 'package:logging/logging.dart';
 import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 import 'package:not_dashs_adventure/Utility/direction.dart';
@@ -55,7 +54,6 @@ class LoaderGameState {
         start: startBlock,
         end: endBlock,
         startDirection: startDir);
-    highlight(lastHighlightBlock);
   }
 
   /// logger for the State

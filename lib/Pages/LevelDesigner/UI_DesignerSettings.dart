@@ -47,7 +47,8 @@ class _DesignerSettingsState extends State<DesignerSettings> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final offset = MediaQuery.of(context).size.center(Offset(-1 * (size.width - 100) / 2, -1 * (size.height - 40) / 2));
+    final offset = MediaQuery.of(context).size.center(
+        Offset(-1 * (size.width - 100) / 2, -1 * (size.height - 40) / 2));
     return BlocBuilder<LevelGenUiCubit, LevelGenUiState>(
       builder: (context, state) {
         return state.showSettings
@@ -57,7 +58,9 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                 margin: EdgeInsets.only(left: offset.dx, top: offset.dy),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: state.darkMode ? Colors.grey.shade900 : Colors.grey.shade100,
+                  color: state.darkMode
+                      ? Colors.grey.shade900
+                      : Colors.grey.shade100,
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -68,11 +71,13 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              BlocProvider.of<LevelGenUiCubit>(context).hideSettings();
+                              BlocProvider.of<LevelGenUiCubit>(context)
+                                  .hideSettings();
                             },
                             icon: Icon(
                               Icons.chevron_left,
-                              color: state.darkMode ? Colors.white : Colors.black,
+                              color:
+                                  state.darkMode ? Colors.white : Colors.black,
                               size: 20,
                             ),
                             splashRadius: 20,
@@ -80,14 +85,20 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                           SizedBox(
                             width: size.width - 150,
                             child: SwitchListTile.adaptive(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 30),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 30),
                               title: Text(
                                 "UI Dark Mode",
-                                style: TextStyle(color: state.darkMode ? Colors.white : Colors.black, fontSize: 13),
+                                style: TextStyle(
+                                    color: state.darkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 13),
                               ),
                               value: state.darkMode,
                               onChanged: (value) {
-                                BlocProvider.of<LevelGenUiCubit>(context).setDarkMode(value);
+                                BlocProvider.of<LevelGenUiCubit>(context)
+                                    .setDarkMode(value);
                                 widget.designer.reRenderBackground = true;
                               },
                             ),
@@ -102,13 +113,18 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Text(
                               "Background Settings",
-                              style: TextStyle(fontSize: 13, color: state.darkMode ? Colors.white : Colors.black),
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: state.darkMode
+                                      ? Colors.white
+                                      : Colors.black),
                             ),
                           ),
+                          const Spacer(),
                           CustomAccentButton(
                             padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.symmetric(horizontal: 30),
-                            backgroundColor: state.darkMode ? Colors.black : Colors.white,
+                            backgroundColor:
+                                state.darkMode ? Colors.black : Colors.white,
                             tapUpFunction: () {
                               showDialog(
                                   context: context,
@@ -125,10 +141,14 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                                         ElevatedButton(
                                           child: const Text('Got it'),
                                           onPressed: () {
-                                            setState(() => currentStartColor = pickerStartColor);
-                                            BlocProvider.of<LevelGenUiCubit>(context)
-                                                .setBackgroundGradientBeginColor(currentStartColor);
-                                            widget.designer.reRenderBackground = true;
+                                            setState(() => currentStartColor =
+                                                pickerStartColor);
+                                            BlocProvider.of<LevelGenUiCubit>(
+                                                    context)
+                                                .setBackgroundGradientBeginColor(
+                                                    currentStartColor);
+                                            widget.designer.reRenderBackground =
+                                                true;
                                             Navigator.of(context).pop();
                                           },
                                         ),
@@ -145,65 +165,101 @@ class _DesignerSettingsState extends State<DesignerSettings> {
                                   size: 30,
                                 ),
                                 Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20),
                                   child: Text("Beginning Color",
-                                      style:
-                                          TextStyle(color: state.darkMode ? Colors.white : Colors.black, fontSize: 11)),
+                                      style: TextStyle(
+                                          color: state.darkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontSize: 11)),
                                 )
                               ],
                             ),
                           ),
                           CustomAccentButton(
-                              tapUpFunction: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext ctx) {
-                                      return AlertDialog(
-                                        content: SingleChildScrollView(
-                                          child: ColorPicker(
-                                            pickerColor: pickerEndColor = state.backgroundBeginColor,
-                                            onColorChanged: changeEndColor,
-                                            enableAlpha: false,
-                                          ),
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  Icons.square,
+                                  color: currentEndColor,
+                                  size: 30,
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Text("Ending Color",
+                                      style: TextStyle(
+                                          color: state.darkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontSize: 11)),
+                                )
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(10),
+                            backgroundColor:
+                                state.darkMode ? Colors.black : Colors.white,
+                            tapUpFunction: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext ctx) {
+                                    return AlertDialog(
+                                      content: SingleChildScrollView(
+                                        child: ColorPicker(
+                                          pickerColor: pickerEndColor =
+                                              state.backgroundBeginColor,
+                                          onColorChanged: changeEndColor,
+                                          enableAlpha: false,
                                         ),
-                                        actions: <Widget>[
-                                          ElevatedButton(
-                                            child: const Text('Got it'),
-                                            onPressed: () {
-                                              setState(() => currentEndColor = pickerEndColor);
-                                              BlocProvider.of<LevelGenUiCubit>(context)
-                                                  .setBackgroundGradientEndColor(currentEndColor);
-                                              widget.designer.reRenderBackground = true;
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    });
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(
-                                    Icons.square,
-                                    color: currentEndColor,
-                                    size: 30,
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                                    child: Text("Ending Color",
-                                        style: TextStyle(
-                                            color: state.darkMode ? Colors.white : Colors.black, fontSize: 11)),
-                                  )
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.symmetric(horizontal: 30),
-                              backgroundColor: state.darkMode ? Colors.black : Colors.white),
+                                      ),
+                                      actions: <Widget>[
+                                        ElevatedButton(
+                                          child: const Text('Got it'),
+                                          onPressed: () {
+                                            setState(() => currentEndColor =
+                                                pickerEndColor);
+                                            BlocProvider.of<LevelGenUiCubit>(
+                                                    context)
+                                                .setBackgroundGradientEndColor(
+                                                    currentEndColor);
+                                            widget.designer.reRenderBackground =
+                                                true;
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
+                          ),
                         ],
                       ),
-                      Row(
-                        children: [],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 10),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Build Grid Size",
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: state.darkMode
+                                      ? Colors.white
+                                      : Colors.black),
+                            ),
+                            const Spacer(),
+                            const SizedBox(
+                              width: 100,
+                              child: TextField(
+                                keyboardType: TextInputType.numberWithOptions(),
+                                maxLength: 2,
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),

@@ -1,15 +1,5 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
 import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesignerWrapper.dart';
-import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_BottomSelector.dart';
-import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_DesignerSettings.dart';
-import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_LevelAndVisibility.dart';
-import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_NavAndOptions.dart';
-import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
-import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_ResourceSelector.dart';
-import 'package:not_dashs_adventure/Pages/LevelDesigner/UI_SaveAndTest.dart';
 import 'package:not_dashs_adventure/Pages/UserLevels/UserLevels.dart';
 
 class MainMenu extends StatefulWidget {
@@ -44,8 +34,6 @@ class _MainMenuState extends State<MainMenu> {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-            image: DecorationImage(image: AssetImage("assets/images/MainMenu.png"), fit: BoxFit.fill)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -56,9 +44,13 @@ class _MainMenuState extends State<MainMenu> {
                 children: [
                   const Text(
                     "Iso worlds",
-                    style: TextStyle(color: Colors.black87, fontFamily: "Pixel", fontSize: 30),
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontFamily: "Pixel",
+                        fontSize: 30),
                   ),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+                  IconButton(
+                      onPressed: () {}, icon: const Icon(Icons.settings)),
                 ],
               ),
             ),
@@ -69,11 +61,14 @@ class _MainMenuState extends State<MainMenu> {
               children: [
                 MaterialButton(
                   onPressed: () {},
-                  child: const Text("Play Story"),
+                  child: const Text("Play Campaign"),
                 ),
                 MaterialButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const ViewUserLevels()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ViewUserLevels()));
                   },
                   child: const Text("User Levels"),
                 ),
