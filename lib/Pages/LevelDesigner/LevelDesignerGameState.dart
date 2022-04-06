@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:convert';
 import 'dart:ui';
@@ -15,9 +16,12 @@ class DesignerGameState {
     required this.highlightSpriteIndex,
     this.levelName = "Untitled",
     this.size = 10,
-  })  : defaultMatrix = List.generate(size, (index) => List.generate(size, (_) => -1)),
-        baseMatrix = List.generate(1, (_) => List.generate(size, (_) => List.generate(size, (_) => -1))),
-        gridMatrix = List.generate(size, (index) => List.generate(size, (_) => gridSpriteIndex)) {
+  })  : defaultMatrix =
+            List.generate(size, (index) => List.generate(size, (_) => -1)),
+        baseMatrix = List.generate(1,
+            (_) => List.generate(size, (_) => List.generate(size, (_) => -1))),
+        gridMatrix = List.generate(
+            size, (index) => List.generate(size, (_) => gridSpriteIndex)) {
     highLightMatrix = List.from(defaultMatrix);
     highLightMatrix[0][0] = highlightSpriteIndex;
   }
@@ -61,13 +65,18 @@ class DesignerGameState {
     }
   }
 
-  void toggleIndexRangeForLastHighlight({required int replaceIndex, required int layerIndex}) {
+  void toggleIndexRangeForLastHighlight(
+      {required int replaceIndex, required int layerIndex}) {
     if (lastHighlightRange == null) return;
     checkForLayer(layerIndex);
-    for (int i = lastHighlightRange!.lowerY; i <= lastHighlightRange!.higherY; i++) {
+    for (int i = lastHighlightRange!.lowerY;
+        i <= lastHighlightRange!.higherY;
+        i++) {
       baseMatrix[layerIndex][i].setAll(
         lastHighlightRange!.lowerX,
-        List<int>.filled(lastHighlightRange!.higherX - lastHighlightRange!.lowerX + 1, replaceIndex),
+        List<int>.filled(
+            lastHighlightRange!.higherX - lastHighlightRange!.lowerX + 1,
+            replaceIndex),
       );
     }
   }
@@ -81,12 +90,17 @@ class DesignerGameState {
     if (startBlock.distance(endBlock) < 1) return;
     // else compute the rectangle to highlight
     final h = HighlightRange(initial: startBlock, b: endBlock);
-    int minY = lastHighlightRange != null ? min(h.lowerY, lastHighlightRange!.lowerY) : h.lowerY;
-    int maxY = lastHighlightRange != null ? max(h.higherY, lastHighlightRange!.higherY) : h.higherY;
+    int minY = lastHighlightRange != null
+        ? min(h.lowerY, lastHighlightRange!.lowerY)
+        : h.lowerY;
+    int maxY = lastHighlightRange != null
+        ? max(h.higherY, lastHighlightRange!.higherY)
+        : h.higherY;
     for (int i = minY; i <= maxY; i++) {
       highLightMatrix[i] = List<int>.generate(size, (index) => -1);
       if (i >= h.lowerY && i <= h.higherY) {
-        highLightMatrix[i].setAll(h.lowerX, List<int>.filled(h.higherX - h.lowerX + 1, highlightSpriteIndex));
+        highLightMatrix[i].setAll(h.lowerX,
+            List<int>.filled(h.higherX - h.lowerX + 1, highlightSpriteIndex));
       }
     }
     lastHighlightRange = h;
@@ -94,7 +108,8 @@ class DesignerGameState {
 
   void resetHighlight() {
     lastHighlightRange = null;
-    highLightMatrix = List.generate(size, (index) => List.generate(size, (_) => -1));
+    highLightMatrix =
+        List.generate(size, (index) => List.generate(size, (_) => -1));
   }
 
   void resetBaseMatrix() {
@@ -107,7 +122,8 @@ class DesignerGameState {
       int difference = index - baseMatrix.length + 1;
       while (difference > 0) {
         _logger.log(Level.INFO, "Adding layer to base matrix");
-        baseMatrix.add(List.generate(size, (index) => List.generate(size, (_) => -1)));
+        baseMatrix.add(
+            List.generate(size, (index) => List.generate(size, (_) => -1)));
         difference--;
       }
       return true;
@@ -116,9 +132,17 @@ class DesignerGameState {
   }
 
   bool isInsideMatrix(Vector2Int block, {int? layerIndex}) {
-    final int rowLen = layerIndex != null ? baseMatrix[layerIndex][0].length : baseMatrix[0].length;
-    final int colLen = layerIndex != null ? baseMatrix[layerIndex].length : baseMatrix.length;
-    if (block.x >= 0 && block.x <= rowLen && block.y >= 0 && block.y <= colLen) return true;
+    final int rowLen = layerIndex != null
+        ? baseMatrix[layerIndex][0].length
+        : baseMatrix[0].length;
+    final int colLen =
+        layerIndex != null ? baseMatrix[layerIndex].length : baseMatrix.length;
+    if (block.x >= 0 &&
+        block.x <= rowLen &&
+        block.y >= 0 &&
+        block.y <= colLen) {
+      return true;
+    }
     return false;
   }
 
@@ -131,6 +155,7 @@ class DesignerGameState {
     required int puzzleLayer,
     required Color gradientBegin,
     required Color gradientEnd,
+    String? filepath,
     bool export = false,
   }) {
     List<List<List<int>>> matrixToBeSaved = List.empty(growable: true);
@@ -156,8 +181,11 @@ class DesignerGameState {
     box.put(levelName, levelModel);
 
     if (export) {
+      assert(filepath != null);
       final jsonMap = levelModel.toJson();
       final String jsonString = jsonEncode(jsonMap);
+      final File file = File("$filepath/$levelName.json");
+      file.writeAsString(jsonString);
       print(jsonString);
     }
   }

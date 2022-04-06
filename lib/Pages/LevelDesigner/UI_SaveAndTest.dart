@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:not_dashs_adventure/Bloc/LevelGen/level_gen_ui_cubit.dart';
@@ -9,9 +10,19 @@ import 'package:not_dashs_adventure/Pages/LevelDesigner/LevelDesigner.dart';
 class SaveAndTest extends StatelessWidget {
   const SaveAndTest({Key? key, required this.levelDesigner}) : super(key: key);
   final LevelDesigner levelDesigner;
+  Future<String?> _pickDir(BuildContext context) async {
+    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+    if (selectedDirectory == null) {
+      return selectedDirectory;
+    }
+    return selectedDirectory;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final offsetMargin = MediaQuery.of(context).size.topRight(const Offset(-140, 10));
+    final offsetMargin =
+        MediaQuery.of(context).size.topRight(const Offset(-140, 10));
     return BlocBuilder<LevelGenUiCubit, LevelGenUiState>(
       builder: (context, state) {
         return Container(
@@ -35,7 +46,9 @@ class SaveAndTest extends StatelessWidget {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return SaveDialog(darkMode: state.darkMode, levelDesigner: levelDesigner);
+                        return SaveDialog(
+                            darkMode: state.darkMode,
+                            levelDesigner: levelDesigner);
                       },
                     );
                   },
@@ -48,10 +61,22 @@ class SaveAndTest extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: CustomAccentButton(
-                    tapUpFunction: () {
-                      showDialog(context: context, builder: (BuildContext context) => const ExportDialog());
+                    tapUpFunction: () async {
+                      final dir = await _pickDir(context);
+
+                      if (dir != null) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => ExportDialog(
+                            darkMode: state.darkMode,
+                            levelDesigner: levelDesigner,
+                            initialSaveDir: dir,
+                          ),
+                        );
+                      }
                     },
-                    backgroundColor: state.darkMode ? Colors.black : Colors.white,
+                    backgroundColor:
+                        state.darkMode ? Colors.black : Colors.white,
                     shadow: false,
                     padding: const EdgeInsets.all(6),
                     child: Row(
