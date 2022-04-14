@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:not_dashs_adventure/Levels/JsonLevelModel.dart';
-import 'package:not_dashs_adventure/Pages/UserLevels/userLevelCard.dart';
+import 'package:not_dashs_adventure/Pages/UserLevels/LevelImport.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:not_dashs_adventure/Utility/Repositories/LevelsRepository.dart';
 
@@ -26,23 +26,30 @@ class _ViewUserLevelsState extends State<ViewUserLevels> {
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.chevron_left_rounded)),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.chevron_left_rounded)),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        child: const Text(
+                          "User Levels",
+                          style: TextStyle(fontSize: 20, fontFamily: "Pixel"),
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    child: const Text(
-                      "User Levels",
-                      style: TextStyle(fontSize: 20, fontFamily: "Pixel"),
-                    ),
-                  ),
+                  const LevelImport(
+                    darkMode: false,
+                  )
                 ],
               ),
               SingleChildScrollView(

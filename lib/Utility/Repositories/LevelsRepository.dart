@@ -22,7 +22,22 @@ class LevelsRepository {
 
   Iterable<LevelModel> get getAllUserLevels => userBox.values;
 
+  void importLevel(LevelModel levelModel) {
+    userBox.put(levelModel.LevelName, levelModel);
+  }
+
   List<Widget> getUserLevelCards() {
+    if (userBox.isEmpty) {
+      return [
+        const Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Text(
+            "No levels yet ... Go the level Designer and make some",
+            style: TextStyle(fontFamily: "Pixel"),
+          ),
+        ),
+      ];
+    }
     List<Widget> list = List<Widget>.empty(growable: true);
     for (LevelModel i in getAllUserLevels) {
       list.add(UserLevelCard(model: i, repository: _instance));
