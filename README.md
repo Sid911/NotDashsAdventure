@@ -19,7 +19,7 @@ Level Player with no HUD
 
 ### Challenges while making the game 🚧
 
-Due to how flutter was made making a isometric real game was not an easy task to be done from scrach (specially at my level of experience with the framework and 3 weeks of offtime development). My inital Guess list of requirements which needed to be built was - 
+Due to how flutter was made making a isometric real game was not an easy task to be done from scratch (specially at my level of experience with the framework and 3 weeks of offtime development). My inital Guess list of requirements which needed to be built was - 
 
 - Way to cache and import tilesheet/Spritesheet
 - Grid calculation for isometric view
@@ -32,7 +32,7 @@ Due to how flutter was made making a isometric real game was not an easy task to
 - Maybe Spritesheets can be imported too with levels?
 
 
-Yup this was my actual initial List of todos. Fortunetely, I was kinda aware about game development space I remembered hearing about [Flame Engine](https://flame-engine.org/). Its an awesome project which not only eliminated many of development headache but it has an awesome community.
+Yup this was my actual initial List of todos. Fortunately, I was kinda aware about game development space I remembered hearing about [Flame Engine](https://flame-engine.org/). Its an awesome project which not only eliminated many of development headache but it has an awesome community.
 
 As always, with a new architecture of flame engine I was basically a chicken with no head trying to build an isometric game in flutter.
 
@@ -45,7 +45,7 @@ As always, with a new architecture of flame engine I was basically a chicken wit
 
 ### Basics 
 
-The importent blocks to be noticed
+The important blocks to be noticed
 
 | Main Blocks                                    |      Type      |  Direction |
 |------------------------------------------------|:--------------:|------------:|

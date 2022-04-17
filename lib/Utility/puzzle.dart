@@ -153,7 +153,7 @@ class Puzzle {
 
   /// swaps two Cells from their coordinates
   bool swapCells(Point cell1, Point cell2) {
-    if ((cell1.x - cell2.x).abs() != 1 && (cell2.x - cell2.x).abs() != 1) {
+    if ((cell1.x - cell2.x).abs() != 1 && (cell1.y - cell2.y).abs() != 1) {
       _logger.log(Level.FINE, "Difference between swap cells is too much");
       return false;
     }
@@ -189,7 +189,8 @@ class Puzzle {
   /// Checks the path of the light in order to get results
   List<Point> getCurrentLightPath() {
     List<Point> pathRecord = List<Point>.empty(growable: true);
-    List<MotionDirection> directionRecord = List<MotionDirection>.empty(growable: true);
+    List<MotionDirection> directionRecord =
+        List<MotionDirection>.empty(growable: true);
     MotionDirection currentMotionDir = startDirection;
     Point currentPoint = start;
 
@@ -198,8 +199,10 @@ class Puzzle {
     directionRecord.add(currentMotionDir);
     while (_steps < maxSolDistance) {
       Point nextPoint = _traverseTillFound(currentPoint, currentMotionDir);
-      print("next point : ${nextPoint.x} , ${nextPoint.y} ; ${nextPoint.cell.toString()}");
-      MotionDirection nextDir = findNewDirection(currentMotionDir, nextPoint.cell!);
+      print(
+          "next point : ${nextPoint.x} , ${nextPoint.y} ; ${nextPoint.cell.toString()}");
+      MotionDirection nextDir =
+          findNewDirection(currentMotionDir, nextPoint.cell!);
       print("next Direction : ${nextDir.toString()}");
       pathRecord.add(nextPoint);
       directionRecord.add(nextDir);
@@ -253,7 +256,8 @@ class Puzzle {
           return Point(current.x, current.y, cell: cell);
         }
       } else {
-        _logger.log(Level.WARNING, "The cell/s were out of bounds while traversing");
+        _logger.log(
+            Level.WARNING, "The cell/s were out of bounds while traversing");
         return Point(current.x, current.y, cell: PuzzleCell.blocked);
       }
     }
@@ -264,7 +268,8 @@ class Puzzle {
   }
 }
 
-MotionDirection findNewDirection(MotionDirection lastDir, PuzzleCell blockType) {
+MotionDirection findNewDirection(
+    MotionDirection lastDir, PuzzleCell blockType) {
   // Arghhhhh I really don't want to think about a concise way of doing this probably would be easier to represent them as numbers
   // but I am typing because I am tired.
   switch (blockType) {
@@ -348,21 +353,37 @@ MotionDirection findNewDirection(MotionDirection lastDir, PuzzleCell blockType) 
     case PuzzleCell.open:
       return lastDir;
     case PuzzleCell.oneWayN:
-      return lastDir == MotionDirection.N ? MotionDirection.N : MotionDirection.none;
+      return lastDir == MotionDirection.N
+          ? MotionDirection.N
+          : MotionDirection.none;
     case PuzzleCell.oneWayS:
-      return lastDir == MotionDirection.S ? MotionDirection.S : MotionDirection.none;
+      return lastDir == MotionDirection.S
+          ? MotionDirection.S
+          : MotionDirection.none;
     case PuzzleCell.oneWayW:
-      return lastDir == MotionDirection.W ? MotionDirection.W : MotionDirection.none;
+      return lastDir == MotionDirection.W
+          ? MotionDirection.W
+          : MotionDirection.none;
     case PuzzleCell.oneWayE:
-      return lastDir == MotionDirection.E ? MotionDirection.E : MotionDirection.none;
+      return lastDir == MotionDirection.E
+          ? MotionDirection.E
+          : MotionDirection.none;
     case PuzzleCell.oneWayNE:
-      return lastDir == MotionDirection.NE ? MotionDirection.NE : MotionDirection.none;
+      return lastDir == MotionDirection.NE
+          ? MotionDirection.NE
+          : MotionDirection.none;
     case PuzzleCell.oneWayNW:
-      return lastDir == MotionDirection.NW ? MotionDirection.NW : MotionDirection.none;
+      return lastDir == MotionDirection.NW
+          ? MotionDirection.NW
+          : MotionDirection.none;
     case PuzzleCell.oneWaySE:
-      return lastDir == MotionDirection.SE ? MotionDirection.NE : MotionDirection.none;
+      return lastDir == MotionDirection.SE
+          ? MotionDirection.NE
+          : MotionDirection.none;
     case PuzzleCell.oneWaySW:
-      return lastDir == MotionDirection.SW ? MotionDirection.SW : MotionDirection.none;
+      return lastDir == MotionDirection.SW
+          ? MotionDirection.SW
+          : MotionDirection.none;
     default:
       return MotionDirection.none;
   }

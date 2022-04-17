@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:not_dashs_adventure/Utility/puzzle.dart';
 
 class Vector2Int {
   Vector2Int({required this.x, required this.y});
@@ -13,7 +14,15 @@ class Vector2Int {
     y = y < 0 ? 0 : y;
   }
 
+  Vector2Int offset(int x, int y) {
+    return Vector2Int(x: this.x + x, y: this.y + y);
+  }
+
   double distance(Vector2Int b) {
-    return sqrt((x * x - b.x * b.x).abs() + (y * y - b.y * b.y).abs());
+    return sqrt(pow(x - b.x, 2) + pow(y - b.y, 2).abs());
+  }
+
+  Point toPoint() {
+    return Point(x, y);
   }
 }

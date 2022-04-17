@@ -12,7 +12,8 @@ import 'package:not_dashs_adventure/Utility/VectorInt.dart';
 import '../../Utility/puzzle.dart';
 import '../Components/IsometricTileMapCustom.dart';
 
-class LevelLoader extends FlameBlocGame with TapDetector, ScrollDetector, ScaleDetector, FPSCounter {
+class LevelLoader extends FlameBlocGame
+    with TapDetector, ScrollDetector, ScaleDetector, FPSCounter {
   LevelLoader({required this.iModel});
   // Level Mode
   LevelModel iModel;
@@ -37,7 +38,8 @@ class LevelLoader extends FlameBlocGame with TapDetector, ScrollDetector, ScaleD
   bool _clickHeld = false;
   bool reRenderBackground = true;
 
-  List<IsometricTileMapCustom> envLayers = List<IsometricTileMapCustom>.empty(growable: true);
+  List<IsometricTileMapCustom> envLayers =
+      List<IsometricTileMapCustom>.empty(growable: true);
   late List<Point> currentLightPath;
   late IsometricTileMapCustom _highLightLayer;
 
@@ -52,19 +54,23 @@ class LevelLoader extends FlameBlocGame with TapDetector, ScrollDetector, ScaleD
     await super.onLoad();
     // Load the basic Tileset and set the state
 
-    final loadedTileset = await _tilesheetRepository.getTileSheet(tilesheetName: iModel.TilesetUID);
+    final loadedTileset = await _tilesheetRepository.getTileSheet(
+        tilesheetName: iModel.TilesetUID);
 
     assert(loadedTileset != null);
     _gameState = LoaderGameState(
-      highlightSpriteIndex: _tilesheetRepository.currentTilesheetLog!.highlightIndex,
+      highlightSpriteIndex:
+          _tilesheetRepository.currentTilesheetLog!.highlightIndex,
       levelName: iModel.LevelName,
       puzzleLayer: iModel.PuzzleLayer,
       baseMatrix: iModel.Layers,
     );
     tileset = loadedTileset!;
     // get the src dimension
-    srcTileSize = _tilesheetRepository.currentTilesheetLog!.srcSize[0].toDouble();
-    tileHeight = _tilesheetRepository.currentTilesheetLog!.srcSize[1].toDouble();
+    srcTileSize =
+        _tilesheetRepository.currentTilesheetLog!.srcSize[0].toDouble();
+    tileHeight =
+        _tilesheetRepository.currentTilesheetLog!.srcSize[1].toDouble();
 
     // Add TileMaps
     computeEnvironment(0);
@@ -103,8 +109,11 @@ class LevelLoader extends FlameBlocGame with TapDetector, ScrollDetector, ScaleD
         priority: i,
         position: newPosition,
         anchor: Anchor.topLeft,
-        propSize: Vector2(_tilesheetRepository.currentTilesheetLog!.puzzlePieceSize[0].toDouble(),
-            _tilesheetRepository.currentTilesheetLog!.puzzlePieceSize[1].toDouble()),
+        propSize: Vector2(
+            _tilesheetRepository.currentTilesheetLog!.puzzlePieceSize[0]
+                .toDouble(),
+            _tilesheetRepository.currentTilesheetLog!.puzzlePieceSize[1]
+                .toDouble()),
       ));
     }
   }
@@ -135,7 +144,10 @@ class LevelLoader extends FlameBlocGame with TapDetector, ScrollDetector, ScaleD
     add(_highLightLayer);
     if (debugMode) {
       final double currentfps = fps(100);
-      if (currentfps < 20) fpsTextPaint.render(canvas, currentfps.roundToDouble().toString(), Vector2(0, 200));
+      if (currentfps < 20) {
+        fpsTextPaint.render(
+            canvas, currentfps.roundToDouble().toString(), Vector2(0, 200));
+      }
       // print(fps(100).toString());
     }
     super.render(canvas);
@@ -144,6 +156,9 @@ class LevelLoader extends FlameBlocGame with TapDetector, ScrollDetector, ScaleD
   @override
   void onTapUp(TapUpInfo info) {
     _clickStart = null;
+    final block =
+        envLayers[iModel.PuzzleLayer].getBlock(info.eventPosition.game);
+    _gameState.toggleIndex(Vector2Int.fromBlock(block: block));
   }
 
   @override
@@ -172,7 +187,8 @@ class LevelLoader extends FlameBlocGame with TapDetector, ScrollDetector, ScaleD
 
     // if difference between the top down and scale start is more than 600ms ... that means user is trying to select
     final currentTime = DateTime.now();
-    if (_clickStart != null && currentTime.difference(_clickStart!).inMilliseconds > 300) {
+    if (_clickStart != null &&
+        currentTime.difference(_clickStart!).inMilliseconds > 300) {
       _clickHeld = true;
     }
   }
