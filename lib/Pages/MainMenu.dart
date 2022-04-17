@@ -34,6 +34,10 @@ class _MainMenuState extends State<MainMenu> {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/MainMenu.png"),
+                fit: BoxFit.fill)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
