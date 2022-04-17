@@ -2,6 +2,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:not_dashs_adventure/Levels/JsonLevelModel.dart';
 import 'package:not_dashs_adventure/Pages/LevelLoader/LevelLoader.dart';
+import 'package:not_dashs_adventure/Pages/LevelLoader/UI_LevelCompleted.dart';
 import 'package:not_dashs_adventure/Pages/LevelLoader/UI_PauseButton.dart';
 import 'package:not_dashs_adventure/Pages/LevelLoader/UI_PauseMenu.dart';
 import 'package:not_dashs_adventure/Pages/LevelLoader/UI_Test.dart';
@@ -29,6 +30,9 @@ Widget getLevelLoader(LevelModel model) {
       "testButton": (BuildContext context, LevelLoader loader) {
         return TestButton(levelLoader: loader);
       },
+      "levelComplete": (BuildContext context, LevelLoader loader) {
+        return LevelComplete(loader: loader);
+      }
     },
     initialActiveOverlays: const ["pauseButton", "testButton"],
   );

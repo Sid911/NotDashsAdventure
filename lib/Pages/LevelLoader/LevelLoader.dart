@@ -95,9 +95,12 @@ class LevelLoader extends FlameBlocGame
 
   void computeLinePath() {
     currentLightPath = _gameState.computePuzzle();
-    if (currentLightPath.last == _gameState.puzzle.end) print("End reached");
     envLayers[_gameState.puzzleLayer].points = currentLightPath;
     envLayers[_gameState.puzzleLayer].renderLines = true;
+    if (currentLightPath.last == _gameState.puzzle.end) {
+      overlays.add("levelComplete");
+    }
+    ;
   }
 
   void computeEnvironment(int initial) {
